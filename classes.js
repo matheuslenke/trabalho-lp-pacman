@@ -29,6 +29,9 @@ class Espacial { // classe pra descrever métodos de localização/orientação
   function get_position() {
 
   }
+  function collision(position1, position2) {
+    return position1.toString() == position2.toString()
+  }
 }
 
 class Fantasma { // classe base dos fantasmas
