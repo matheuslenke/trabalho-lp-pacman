@@ -6,10 +6,10 @@ class Pacman {
     this.morto = false;
     this.comivel = true;
   }
-  function comer() {
+  comer() {
 
   }
-  function morrer() {
+  morrer() {
     this.morto = true;
     this.vidas-- ;
   }
@@ -17,19 +17,19 @@ class Pacman {
 
 class Espacial { // classe pra descrever métodos de localização/orientação
   this.sentidos = ['Cima' : 0, 'Direita' : 1, 'Baixo' : 2, 'Esquerda' : 3];
-  function set_sentido(sentido) {
+  set_sentido(sentido) {
 
   }
-  function get_sentido() {
+  get_sentido() {
 
   }
-  function set_position(position) {
+  set_position(position) {
 
   }
-  function get_position() {
+  get_position() {
 
   }
-  function collision(position1, position2) {
+  collision(position1, position2) {
     return position1.toString() == position2.toString()
   }
 }
@@ -55,6 +55,12 @@ class Inky extends Fantasma { // Fantasma Ciano
   }
 }
 class Clyde extends Fantasma { // Fantama Amarelo
+  constructor() {
+
+  }
+}
+
+class Mapa {
   constructor() {
 
   }
