@@ -6,11 +6,12 @@ const DOWN = 1;
 const LEFT = 2;
 const RIGHT = 3;
 
-export default class Snake extends Phaser.Class {
+export default new Phaser.Class ({
 
-    constructor (scene, x, y)
+    initialize:
+
+    function Pacman (scene, x, y)
     {
-        super()
         this.headPosition = new Phaser.Geom.Point(x, y);
 
         this.body = scene.add.group();
@@ -20,23 +21,21 @@ export default class Snake extends Phaser.Class {
 
         this.alive = true;
 
-        this.speed = 100;
+        this.speed = 0.009;
 
         this.moveTime = 0;
 
-        this.tail = new Phaser.Geom.Point(x, y);
-
         this.heading = RIGHT;
         this.direction = RIGHT;
-    }
+    },
 
-    update (time)
+    update (time, delta)
     {
         if (time >= this.moveTime)
         {
-            return this.move(time);
+            return this.move(time, delta);
         }
-    }
+    },
 
     faceLeft ()
     {
@@ -44,7 +43,7 @@ export default class Snake extends Phaser.Class {
         {
             this.heading = LEFT;
         }
-    }
+    },
 
     faceRight ()
     {
@@ -52,7 +51,7 @@ export default class Snake extends Phaser.Class {
         {
             this.heading = RIGHT;
         }
-    }
+    },
 
     faceUp ()
     {
@@ -60,7 +59,7 @@ export default class Snake extends Phaser.Class {
         {
             this.heading = UP;
         }
-    }
+    },
 
     faceDown ()
     {
@@ -68,9 +67,9 @@ export default class Snake extends Phaser.Class {
         {
             this.heading = DOWN;
         }
-    }
+    },
 
-    move (time)
+    move (time, delta)
     {
         /**
         * Based on the heading property (which is the direction the pgroup pressed)
@@ -82,19 +81,19 @@ export default class Snake extends Phaser.Class {
         switch (this.heading)
         {
             case LEFT:
-                this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x - 1, 0, 40);
+                this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x - (this.speed * delta), 0, 40);
                 break;
 
             case RIGHT:
-                this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x + 1, 0, 40);
+                this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x + (this.speed * delta), 0, 40);
                 break;
 
             case UP:
-                this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y - 1, 0, 30);
+                this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y -(this.speed * delta), 0, 30);
                 break;
 
             case DOWN:
-                this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y + 1, 0, 30);
+                this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y + (this.speed * delta), 0, 30);
                 break;
             default:
                 break;
@@ -124,14 +123,14 @@ export default class Snake extends Phaser.Class {
 
             return true;
         
-    }
+    },
 
     grow ()
     {
         const newPart = this.body.create(this.tail.x, this.tail.y, 'body');
 
         newPart.setOrigin(0);
-    }
+    },
 
     collideWithFood (food)
     {
@@ -152,7 +151,7 @@ export default class Snake extends Phaser.Class {
         
             return false;
         
-    }
+    },
 
     updateGrid (grid)
     {
@@ -170,4 +169,4 @@ export default class Snake extends Phaser.Class {
         return grid;
     }
 
-};
+});

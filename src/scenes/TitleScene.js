@@ -23,5 +23,17 @@ export default class TitleScene extends Phaser.Scene {
           yoyo: true,
           loop: -1
       });
+
+      this.add.text(100, 100, 'Pacman game', {
+        font: '64px Bangers',
+        fill: '#7744ff'
+      })
+  }
+
+  update() {
+    setTimeout(() => {
+      this.scene.start('GameScene')
+    },3000)
+    // this.scene.start('GameScene')
   }
 }
