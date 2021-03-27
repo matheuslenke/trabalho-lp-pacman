@@ -1,13 +1,15 @@
 import Phaser from 'phaser'
 
 import FoodImg from '../../assets/images/other/apple.png'
-import PacmanImg from '../../assets/images/pacman-left/1.png'
+import PacmanSprite from '../../assets/images/pacman.png'
+
 import Map from '../../assets/images/map.png'
 
 import Pacman from '../classes/Pacman'
 import Food from '../classes/Food'
 
 let pacman
+let platforms
 
 export default class extends Phaser.Scene {
     constructor() {
@@ -16,7 +18,10 @@ export default class extends Phaser.Scene {
 
     preload() {
         this.load.image('food', FoodImg)
-        this.load.image('body', PacmanImg)
+        this.load.spritesheet('pacman', PacmanSprite, {
+            frameWidth: 26,
+            frameHeight: 26,
+        })
         this.load.image('map', Map)
     }
 
@@ -25,8 +30,13 @@ export default class extends Phaser.Scene {
 
         this.food = new Food(this, 3, 4)
 
+        platforms = this.physics.add.staticGroup()
+
+        platforms.create(400, 568, 'food').setScale(10).refreshBody()
+
         pacman = new Pacman(this, 15, 8)
 
+        this.physics.add.collider(pacman.getBody(), platforms)
         this.cursors = this.input.keyboard.createCursorKeys()
     }
 
@@ -36,11 +46,15 @@ export default class extends Phaser.Scene {
         }
         if (this.cursors.left.isDown) {
             pacman.faceLeft()
+            console.log('Facing down')
         } else if (this.cursors.right.isDown) {
             pacman.faceRight()
+            console.log('Facing Right')
         } else if (this.cursors.up.isDown) {
             pacman.faceUp()
+            console.log('Facing Up')
         } else if (this.cursors.down.isDown) {
+            console.log('Facing Down')
             pacman.faceDown()
         }
 
@@ -53,8 +67,6 @@ export default class extends Phaser.Scene {
         //         // repositionFood();
         //     }
         // }
-        console.log(time)
-        pacman.update(time, delta)
     }
 
     /**

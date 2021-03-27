@@ -35,10 +35,17 @@ const config = {
     scale: {
         zoom: 1,
     },
-    backgroundColor: '#333',
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 0 },
+            debug: false,
+        },
+    },
+    backgroundColor: '#111',
     parent: 'pacman',
-    scene: [BootScene, TitleScene, GameScene]
-};
+    scene: [BootScene, TitleScene, GameScene],
+}
 
 // eslint-disable-next-line no-unused-vars
 const game = new Phaser.Game(config)

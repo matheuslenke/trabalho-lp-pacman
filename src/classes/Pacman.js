@@ -1,172 +1,125 @@
 import Phaser from 'phaser'
 
 //  Direction consts
-const UP = 0;
-const DOWN = 1;
-const LEFT = 2;
-const RIGHT = 3;
+const UP = 0
+const DOWN = 1
+const LEFT = 2
+const RIGHT = 3
+const VELOCITY = 150
 
-export default new Phaser.Class ({
+export default new Phaser.Class({
+    initialize: function Pacman(scene, x, y) {
+        this.alive = true
 
-    initialize:
+        this.body = scene.physics.add.sprite(250, 400, 'pacman')
 
-    function Pacman (scene, x, y)
-    {
-        this.headPosition = new Phaser.Geom.Point(x, y);
+        this.body.anims.create({
+            key: 'pacmanDown',
+            frames: scene.anims.generateFrameNames('pacman', {
+                start: 0,
+                end: 2,
+            }),
+            frameRate: 6,
+            repeat: -1,
+        })
 
-        this.body = scene.add.group();
+        this.body.anims.create({
+            key: 'pacmanLeft',
+            frames: scene.anims.generateFrameNames('pacman', {
+                start: 3,
+                end: 5,
+            }),
+            frameRate: 6,
+            repeat: -1,
+        })
+        this.body.anims.create({
+            key: 'pacmanRight',
+            frames: scene.anims.generateFrameNames('pacman', {
+                start: 6,
+                end: 8,
+            }),
+            frameRate: 6,
+            repeat: -1,
+        })
+        this.body.anims.create({
+            key: 'pacmanUp',
+            frames: scene.anims.generateFrameNames('pacman', {
+                start: 9,
+                end: 11,
+            }),
+            frameRate: 6,
+            repeat: -1,
+        })
 
-        this.head = this.body.create(x * 16, y * 16, 'body');
-        this.head.setOrigin(0);
+        this.body.play('pacmanRight')
+        // this.body.setCollideWorldBounds(true)
 
-        this.alive = true;
-
-        this.speed = 0.009;
-
-        this.moveTime = 0;
-
-        this.heading = RIGHT;
-        this.direction = RIGHT;
+        this.faceRight()
     },
 
-    update (time, delta)
-    {
-        if (time >= this.moveTime)
-        {
-            return this.move(time, delta);
+    getBody() {
+        return this.body
+    },
+
+    faceLeft() {
+        if (this.direction !== LEFT) {
+            this.direction = LEFT
+            this.body.setVelocity(-VELOCITY, 0)
+            this.body.play('pacmanLeft')
         }
     },
 
-    faceLeft ()
-    {
-        if (this.direction === UP || this.direction === DOWN)
-        {
-            this.heading = LEFT;
+    faceRight() {
+        if (this.direction !== RIGHT) {
+            this.direction = RIGHT
+            this.body.setVelocity(VELOCITY, 0)
+            this.body.play('pacmanRight')
         }
     },
 
-    faceRight ()
-    {
-        if (this.direction === UP || this.direction === DOWN)
-        {
-            this.heading = RIGHT;
+    faceUp() {
+        if (this.direction !== UP) {
+            this.direction = UP
+            this.body.setVelocity(0, -VELOCITY)
+            this.body.play('pacmanUp')
         }
     },
 
-    faceUp ()
-    {
-        if (this.direction === LEFT || this.direction === RIGHT)
-        {
-            this.heading = UP;
+    faceDown() {
+        if (this.direction !== DOWN) {
+            this.direction = DOWN
+            this.body.setVelocity(0, VELOCITY)
+            this.body.play('pacmanDown')
         }
     },
 
-    faceDown ()
-    {
-        if (this.direction === LEFT || this.direction === RIGHT)
-        {
-            this.heading = DOWN;
-        }
-    },
+    // collideWithFood(food) {
+    //     if (this.head.x === food.x && this.head.y === food.y) {
+    //         this.grow()
 
-    move (time, delta)
-    {
-        /**
-        * Based on the heading property (which is the direction the pgroup pressed)
-        * we update the headPosition value accordingly.
-        * 
-        * The Math.wrap call allow the snake to wrap around the screen, so when
-        * it goes off any of the sides it re-appears on the other.
-        */
-        switch (this.heading)
-        {
-            case LEFT:
-                this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x - (this.speed * delta), 0, 40);
-                break;
+    //         food.eat()
 
-            case RIGHT:
-                this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x + (this.speed * delta), 0, 40);
-                break;
+    //         //  For every 5 items of food eaten we'll increase the snake speed a little
+    //         if (this.speed > 20 && food.total % 5 === 0) {
+    //             this.speed -= 5
+    //         }
 
-            case UP:
-                this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y -(this.speed * delta), 0, 30);
-                break;
+    //         return true
+    //     }
 
-            case DOWN:
-                this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y + (this.speed * delta), 0, 30);
-                break;
-            default:
-                break;
-        }
+    //     return false
+    // },
 
-        this.direction = this.heading;
+    // updateGrid(grid) {
+    //     //  Remove all body pieces from valid positions list
+    //     this.body.children.each((segment) => {
+    //         const bx = segment.x / 16
+    //         const by = segment.y / 16
 
-        //  Update the body segments and place the last coordinate into this.tail
-        Phaser.Actions.ShiftPosition(this.body.getChildren(), this.headPosition.x * 16, this.headPosition.y * 16, 1, this.tail);
+    //         // eslint-disable-next-line no-param-reassign
+    //         grid[by][bx] = false
+    //     })
 
-        //  Check to see if any of the body pieces have the same x/y as the head
-        //  If they do, the head ran into the body
-
-        const hitBody = Phaser.Actions.GetFirst(this.body.getChildren(), { x: this.head.x, y: this.head.y }, 1);
-
-        if (hitBody)
-        {
-            console.log('dead');
-
-            this.alive = false;
-
-            return false;
-        }
-        
-            //  Update the timer ready for the next movement
-            this.moveTime = time + this.speed;
-
-            return true;
-        
-    },
-
-    grow ()
-    {
-        const newPart = this.body.create(this.tail.x, this.tail.y, 'body');
-
-        newPart.setOrigin(0);
-    },
-
-    collideWithFood (food)
-    {
-        if (this.head.x === food.x && this.head.y === food.y)
-        {
-            this.grow();
-
-            food.eat();
-
-            //  For every 5 items of food eaten we'll increase the snake speed a little
-            if (this.speed > 20 && food.total % 5 === 0)
-            {
-                this.speed -= 5;
-            }
-
-            return true;
-        }
-        
-            return false;
-        
-    },
-
-    updateGrid (grid)
-    {
-        //  Remove all body pieces from valid positions list
-        this.body.children.each((segment) => {
-
-            const bx = segment.x / 16;
-            const by = segment.y / 16;
-
-            // eslint-disable-next-line no-param-reassign
-            grid[by][bx] = false;
-
-        });
-
-        return grid;
-    }
-
-});
+    //     return grid
+    // },
+})
