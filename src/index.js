@@ -29,8 +29,8 @@ import GameScene from './scenes/GameScene'
 
 const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 600,
+    height: 800,
     pixelArt: true,
     scale: {
         zoom: 1,

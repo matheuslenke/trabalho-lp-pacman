@@ -31,9 +31,9 @@ export default class TitleScene extends Phaser.Scene {
   }
 
   update() {
-    setTimeout(() => {
-      this.scene.start('GameScene')
-    },3000)
-    // this.scene.start('GameScene')
+    // setTimeout(() => {
+    //   this.scene.start('GameScene')
+    // },3000)
+    this.scene.start('GameScene')
   }
 }
