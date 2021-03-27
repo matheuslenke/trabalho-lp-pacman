@@ -1,4 +1,3 @@
-
 import Phaser from 'phaser'
 
 export default new Phaser.Class({
@@ -7,22 +6,21 @@ export default new Phaser.Class({
 
     initialize:
 
-    function Food (scene, x, y)
-    {
-        Phaser.GameObjects.Image.call(this, scene)
+        function Food(scene, x, y) {
+            Phaser.GameObjects.Image.call(this, scene)
 
-        this.setTexture('food');
-        this.setPosition(x * 16, y * 16);
-        this.setOrigin(0);
+            this.setTexture('food');
+            this.setPosition(x * 16, y * 16);
+            this.setOrigin(0);
 
-        this.total = 0;
+            // this.total = 0;
 
-        scene.children.add(this);
-    },
+            scene.children.add(this);
+        },
 
-    eat ()
-    {
-        this.total++;
-    }
+    // eat ()
+    // {
+    //     this.total++;
+    // }
 
 });
