@@ -50,11 +50,10 @@ export default new Phaser.Class({
             frameRate: 6,
             repeat: -1,
         })
-
-        this.body.play('pacmanRight')
         // this.body.setCollideWorldBounds(true)
 
-        this.faceRight()
+        this.direction;
+        this.faceRight();
     },
 
     getBody() {
