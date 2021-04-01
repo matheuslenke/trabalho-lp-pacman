@@ -36,31 +36,31 @@ export default new Phaser.Class({
                     continue;
                 } else {
                     this.linearDist(getPosition(), getTarget());
-                    break;
                 }
-                case DOWN:
-                    if (this.directionBlocked(DOWN)) {
-                        continue;
-                    } else {
-                        this.linearDist(getPosition(), getTarget());
-                        break;
-                    }
-                    case LEFT:
-                        if (this.directionBlocked(LEFT)) {
-                            continue;
-                        } else {
-                            this.linearDist(getPosition(), getTarget());
-                            break;
-                        }
-                        case RIGHT:
-                            if (this.directionBlocked(RIGHT)) {
-                                continue;
-                            } else {
-                                this.linearDist(getPosition(), getTarget());
-                                break;
-                            }
-                            default:
-                                continue;
+                break;
+            case DOWN:
+                if (this.directionBlocked(DOWN)) {
+                    continue;
+                } else {
+                    this.linearDist(getPosition(), getTarget());
+                }
+                break;
+            case LEFT:
+                if (this.directionBlocked(LEFT)) {
+                    continue;
+                } else {
+                    this.linearDist(getPosition(), getTarget());
+                }
+                break;
+            case RIGHT:
+                if (this.directionBlocked(RIGHT)) {
+                    continue;
+                } else {
+                    this.linearDist(getPosition(), getTarget());
+                }
+                break;
+            default:
+                continue;
         }
     },
 
