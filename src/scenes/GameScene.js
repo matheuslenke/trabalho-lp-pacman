@@ -2,11 +2,20 @@ import Phaser from 'phaser'
 
 import FoodImg from '../../assets/images/other/apple.png'
 import PacmanSprite from '../../assets/images/Sprite_Sheets/pacman.png'
+import BlinkySprite from '../../assets/images/Sprite_Sheets/blinky.png'
+import PinkySprite from '../../assets/images/Sprite_Sheets/pinky.png'
+import InkySprite from '../../assets/images/Sprite_Sheets/inky.png'
+import ClydeSprite from '../../assets/images/Sprite_Sheets/clyde.png'
 
 import Map from '../../assets/images/Sprite_Sheets/MazeTilemap.png'
 
 import Pacman from '../classes/Pacman'
 import Food from '../classes/Food'
+import Fantasma from '../classes/Fantasma'
+import Blinky from '../classes/Blinky'
+import Pinky from '../classes/Pinky'
+import Inky from '../classes/Inky'
+import Clyde from '../classes/Clyde'
 
 let pacman
 let mazeLayer
@@ -14,6 +23,11 @@ let foodLayer
 let powerupsLayer
 let map
 let scoreText
+let blinky
+let pinky
+let inky
+let clyde
+let platforms
 
 export default class extends Phaser.Scene {
     constructor() {
@@ -29,6 +43,23 @@ export default class extends Phaser.Scene {
         })
         this.load.image('tiles', Map)
         this.load.tilemapTiledJSON('map', '../assets/tilemaps/maze1.json')
+        this.load.spritesheet('blinky', BlinkySprite, {
+            frameWidth: 16,
+            frameHeight: 16,
+        })
+        this.load.spritesheet('pinky', PinkySprite, {
+            frameWidth: 16,
+            frameHeight: 16,
+        })
+        this.load.spritesheet('inky', InkySprite, {
+            frameWidth: 16,
+            frameHeight: 16,
+        })
+        this.load.spritesheet('clyde', ClydeSprite, {
+            frameWidth: 16,
+            frameHeight: 16,
+        })
+        this.load.image('map', Map)
     }
 
     create() {
@@ -43,12 +74,26 @@ export default class extends Phaser.Scene {
         // Criando o personagem
         pacman = new Pacman(this, 28, 36)
 
+        // Controles do jogo
+        blinky = new Blinky(this)
+        pinky = new Pinky(this)
+        inky = new Inky(this)
+        clyde = new Clyde(this)
+
+        // Adicionando colisão com os fantasmas
+        this.physics.add.collider(pacman.getPlayer(), platforms)
+        this.physics.add.collider(blinky.getBody(), platforms)
+        this.physics.add.collider(pinky.getBody(), platforms)
+        this.physics.add.collider(inky.getBody(), platforms)
+        this.physics.add.collider(clyde.getBody(), platforms)
+
         // Adicionando colisão do mapa com pacman
         mazeLayer.setCollisionByProperty({ collides: true })
         this.physics.add.collider(pacman.getPlayer(), mazeLayer)
 
-        // Controles do jogo
+        // Controles
         this.cursors = this.input.keyboard.createCursorKeys()
+        // Texto de score
         scoreText = this.add.text(5, 5, '', { fontSize: '8px', fill: '#fff' })
         updateText()
     }
@@ -75,6 +120,14 @@ export default class extends Phaser.Scene {
         if (pacman.update(mazeLayer, time, delta)) {
             checkHitFood()
             checkHitPowerup()
+        }
+
+        // Atualiza movimento dos fantasmas
+        if (time % 400 >= 0 && time % 400 <= 15) {
+            clyde.cycleDirection()
+            pinky.cycleDirection()
+            blinky.cycleDirection()
+            inky.cycleDirection()
         }
     }
 }
