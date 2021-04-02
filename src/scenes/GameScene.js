@@ -1,130 +1,117 @@
 import Phaser from 'phaser'
 
 import FoodImg from '../../assets/images/other/apple.png'
-import PacmanSprite from '../../assets/images/pacman.png'
+import PacmanSprite from '../../assets/images/Sprite_Sheets/pacman.png'
 
-import Map from '../../assets/images/map.png'
+import Map from '../../assets/images/Sprite_Sheets/MazeTilemap.png'
 
 import Pacman from '../classes/Pacman'
 import Food from '../classes/Food'
 
 let pacman
-let platforms
+let mazeLayer
+let foodLayer
+let powerupsLayer
+let map
+let scoreText
 
 export default class extends Phaser.Scene {
     constructor() {
         super({ key: 'GameScene' })
+        this.frameTime = 0
     }
 
     preload() {
         this.load.image('food', FoodImg)
         this.load.spritesheet('pacman', PacmanSprite, {
-            frameWidth: 26,
-            frameHeight: 26,
+            frameWidth: 16,
+            frameHeight: 16,
         })
-        this.load.image('map', Map)
+        this.load.image('tiles', Map)
+        this.load.tilemapTiledJSON('map', '../assets/tilemaps/maze1.json')
     }
 
     create() {
-        this.add.image(300, 400, 'map')
+        // Criação do labirinto
+        map = this.make.tilemap({ key: 'map' })
+        const tileset = map.addTilesetImage('MazeTilemap', 'tiles')
 
-        this.food = new Food(this, 3, 4)
+        mazeLayer = map.createLayer('Borders', tileset, 0, 24)
+        foodLayer = map.createLayer('Food', tileset, 0, 24)
+        powerupsLayer = map.createLayer('Powerups', tileset, 0, 24)
 
-        platforms = this.physics.add.staticGroup()
+        // Criando o personagem
+        pacman = new Pacman(this, 28, 36)
 
-        platforms.create(400, 568, 'food').setScale(10).refreshBody()
+        // Adicionando colisão do mapa com pacman
+        mazeLayer.setCollisionByProperty({ collides: true })
+        this.physics.add.collider(pacman.getPlayer(), mazeLayer)
 
-        pacman = new Pacman(this, 15, 8)
-
-        this.physics.add.collider(pacman.getBody(), platforms)
+        // Controles do jogo
         this.cursors = this.input.keyboard.createCursorKeys()
+        scoreText = this.add.text(5, 5, '', { fontSize: '8px', fill: '#fff' })
+        updateText()
     }
 
     update(time, delta) {
         if (!pacman.alive) {
             return
         }
+        this.frameTime += delta
+        // Checa se não está numa posição quebrada
         if (this.cursors.left.isDown) {
-            pacman.faceLeft()
-            console.log('Facing down')
+            pacman.wantToFaceLeft()
         } else if (this.cursors.right.isDown) {
-            pacman.faceRight()
-            console.log('Facing Right')
+            pacman.wantToFaceRight()
         } else if (this.cursors.up.isDown) {
-            pacman.faceUp()
-            console.log('Facing Up')
+            pacman.wantToFaceUp()
         } else if (this.cursors.down.isDown) {
-            console.log('Facing Down')
-            pacman.faceDown()
+            pacman.wantToFaceDown()
         }
+        pacman.turnDirection(mazeLayer)
 
-        // if (this.pacman.update(time))
-        // {
-        //     //  If the this.pacman updated, we need to check for collision against food
-
-        //     if (this.pacman.collideWithFood(this.food))
-        //     {
-        //         // repositionFood();
-        //     }
-        // }
+        // Checa se o pacman a cada atualização de posição colidiu com uma comida
+        // ou se colidiu com um powerup
+        if (pacman.update(mazeLayer, time, delta)) {
+            checkHitFood()
+            checkHitPowerup()
+        }
     }
+}
 
-    /**
-     * We can place the food anywhere in our 40x30 grid
-     * *except* on-top of the snake, so we need
-     * to filter those out of the possible food locations.
-     * If there aren't any locations left, they've won!
-     *
-     * @method repositionFood
-     * @return {boolean} true if the food was placed, otherwise false
-     */
-    //  repositionFood ()
-    // {
-    //     //  First create an array that assumes all positions
-    //     //  are valid for the new piece of food
+function checkHitFood() {
+    // Checa se está em cima de uma food
+    const { x, y } = pacman.player
+    const tile = foodLayer.getTileAtWorldXY(x, y, false)
+    if (tile) {
+        hitFood(tile)
+    }
+}
 
-    //     //  A Grid we'll use to reposition the food each time it's eaten
-    //     const testGrid = [];
+function hitFood(tile) {
+    // Remove a food colidida e aumenta o score
+    foodLayer.removeTileAt(tile.x, tile.y)
+    pacman.hitFood()
+    updateText()
+    return false
+}
+function checkHitPowerup() {
+    // Checa se está em cima de uma food
+    const { x, y } = pacman.player
+    const tile = powerupsLayer.getTileAtWorldXY(x, y, false)
+    if (tile) {
+        hitPowerup(tile)
+    }
+}
 
-    //     for (var y = 0; y < 30; y++)
-    //     {
-    //         testGrid[y] = [];
+function hitPowerup(tile) {
+    // Remove a food colidida e aumenta o score
+    powerupsLayer.removeTileAt(tile.x, tile.y)
+    pacman.hitPowerup()
+    updateText()
+    return false
+}
 
-    //         for (var x = 0; x < 40; x++)
-    //         {
-    //             testGrid[y][x] = true;
-    //         }
-    //     }
-
-    //     snake.updateGrid(testGrid);
-
-    //     //  Purge out false positions
-    //     const validLocations = [];
-
-    //     for (var y = 0; y < 30; y++)
-    //     {
-    //         for (var x = 0; x < 40; x++)
-    //         {
-    //             if (testGrid[y][x] === true)
-    //             {
-    //                 //  Is this position valid for food? If so, add it here ...
-    //                 validLocations.push({ x, y });
-    //             }
-    //         }
-    //     }
-
-    //     if (validLocations.length > 0)
-    //     {
-    //         //  Use the RNG to pick a random food position
-    //         const pos = Phaser.Math.RND.pick(validLocations);
-
-    //         //  And place it
-    //         food.setPosition(pos.x * 16, pos.y * 16);
-
-    //         return true;
-    //     }
-
-    //         return false;
-
-    // }
+function updateText() {
+    scoreText.setText(pacman.getScore())
 }

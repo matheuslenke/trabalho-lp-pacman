@@ -29,11 +29,11 @@ import GameScene from './scenes/GameScene'
 
 const config = {
     type: Phaser.AUTO,
-    width: 600,
-    height: 800,
+    width: 224,
+    height: 288,
     pixelArt: true,
     scale: {
-        zoom: 1,
+        zoom: 3,
     },
     physics: {
         default: 'arcade',
@@ -42,7 +42,8 @@ const config = {
             debug: false,
         },
     },
-    backgroundColor: '#111',
+    framesPerSecond: 30,
+    backgroundColor: '#000',
     parent: 'pacman',
     scene: [BootScene, TitleScene, GameScene],
 }
