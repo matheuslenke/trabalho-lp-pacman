@@ -83,15 +83,11 @@ export default class extends Phaser.Scene {
         }
         if (this.cursors.left.isDown) {
             pacman.faceLeft()
-            console.log('Facing down')
         } else if (this.cursors.right.isDown) {
             pacman.faceRight()
-            console.log('Facing Right')
         } else if (this.cursors.up.isDown) {
             pacman.faceUp()
-            console.log('Facing Up')
         } else if (this.cursors.down.isDown) {
-            console.log('Facing Down')
             pacman.faceDown()
         }
         if (time % 400 >= 0 && time % 400 <= 15) {

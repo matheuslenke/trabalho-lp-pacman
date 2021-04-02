@@ -62,6 +62,7 @@ export default new Phaser.Class({
             this.direction = LEFT
             this.body.setVelocity(-VELOCITY, 0)
             this.body.play('pacmanLeft')
+            console.log('Facing down')
         }
     },
 
@@ -70,6 +71,7 @@ export default new Phaser.Class({
             this.direction = RIGHT
             this.body.setVelocity(VELOCITY, 0)
             this.body.play('pacmanRight')
+            console.log('Facing Right')
         }
     },
 
@@ -78,6 +80,7 @@ export default new Phaser.Class({
             this.direction = UP
             this.body.setVelocity(0, -VELOCITY)
             this.body.play('pacmanUp')
+            console.log('Facing Up')
         }
     },
 
@@ -86,6 +89,7 @@ export default new Phaser.Class({
             this.direction = DOWN
             this.body.setVelocity(0, VELOCITY)
             this.body.play('pacmanDown')
+            console.log('Facing Down')
         }
     },
 })
