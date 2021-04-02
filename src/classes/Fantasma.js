@@ -6,10 +6,10 @@ const DOWN = 1;
 const LEFT = 2;
 const RIGHT = 3;
 const VELOCITY = 150;
-const EATEN = 0;
-const SCATTER = 1;
-const CHASE = 2;
-const FRIGHTENED = 3;
+const EATEN = 'eaten';
+const SCATTER = 'scatter';
+const CHASE = 'chase';
+const FRIGHTENED = 'frightened';
 
 export default new Phaser.Class({
 
