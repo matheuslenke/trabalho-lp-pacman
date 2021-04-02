@@ -8,7 +8,7 @@ const RIGHT = 3
 const VELOCITY = 150
 
 export default new Phaser.Class({
-    initialize: function Pacman(scene, x, y) {
+    initialize: function Pacman(scene) {
         this.alive = true
 
         this.body = scene.physics.add.sprite(250, 400, 'pacman')
@@ -50,8 +50,6 @@ export default new Phaser.Class({
             frameRate: 6,
             repeat: -1,
         })
-        // this.body.setCollideWorldBounds(true)
-
         this.direction;
         this.faceRight();
     },
@@ -91,34 +89,4 @@ export default new Phaser.Class({
             this.body.play('pacmanDown')
         }
     },
-
-    // collideWithFood(food) {
-    //     if (this.head.x === food.x && this.head.y === food.y) {
-    //         this.grow()
-
-    //         food.eat()
-
-    //         //  For every 5 items of food eaten we'll increase the snake speed a little
-    //         if (this.speed > 20 && food.total % 5 === 0) {
-    //             this.speed -= 5
-    //         }
-
-    //         return true
-    //     }
-
-    //     return false
-    // },
-
-    // updateGrid(grid) {
-    //     //  Remove all body pieces from valid positions list
-    //     this.body.children.each((segment) => {
-    //         const bx = segment.x / 16
-    //         const by = segment.y / 16
-
-    //         // eslint-disable-next-line no-param-reassign
-    //         grid[by][bx] = false
-    //     })
-
-    //     return grid
-    // },
 })

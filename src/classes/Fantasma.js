@@ -31,7 +31,7 @@ export default new Phaser.Class({
     directionBlocked() {},
     getPosition() {},
 
-    determineDirection() { // NÃO TERMINEI !!!
+    determineDirection() {
         switch (this.direction) {
             case UP:
                 if (this.directionBlocked(UP)) {
@@ -129,27 +129,3 @@ export default new Phaser.Class({
         }
     },
 })
-
-
-/*
-class Blinky extends Fantasma { // Fantasma Vermelho
-    constructor() {
-
-    }
-}
-class Pinky extends Fantasma { // Fantasma Rosa
-    constructor() {
-
-    }
-}
-class Inky extends Fantasma { // Fantasma Ciano
-    constructor() {
-
-    }
-}
-class Clyde extends Fantasma { // Fantama Amarelo
-    constructor() {
-
-    }
-}
-*/

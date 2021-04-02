@@ -16,7 +16,6 @@ export default new Phaser.Class({
     Extends: Phaser.Class.Fantasma,
 
     initialize: function Clyde(scene) { // Fantasma Vermelho
-        // this.state = CHASE;
         this.name = 'fantasma';
         this.body = scene.physics.add.sprite(250, 450, 'clyde').setScale(3);
 
@@ -56,7 +55,6 @@ export default new Phaser.Class({
             frameRate: 6,
             repeat: -1,
         })
-        //this.direction;
         this.faceRight();
     },
 
