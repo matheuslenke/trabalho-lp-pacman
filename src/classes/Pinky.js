@@ -1,23 +1,24 @@
 import Phaser from 'phaser'
 
 //  Direction consts
-const UP = 0;
-const DOWN = 1;
-const LEFT = 2;
-const RIGHT = 3;
-const VELOCITY = 100;
-const EATEN = 0;
-const SCATTER = 1;
-const CHASE = 2;
-const FRIGHTENED = 3;
+const UP = 0
+const DOWN = 1
+const LEFT = 2
+const RIGHT = 3
+const VELOCITY = 100
+const EATEN = 0
+const SCATTER = 1
+const CHASE = 2
+const FRIGHTENED = 3
 
 export default new Phaser.Class({
-
     Extends: Phaser.Class.Fantasma,
 
-    initialize: function Pinky(scene) { // Fantasma Vermelho
-        this.name = 'fantasma';
-        this.body = scene.physics.add.sprite(250, 550, 'pinky').setScale(3);
+    initialize: function Pinky(scene, x, y) {
+        // Fantasma Vermelho
+        this.name = 'fantasma'
+        this.body = scene.physics.add.sprite(x, y, 'pinky').setScale(0.5)
+        this.body.setDisplaySize(16, 16)
 
         this.body.anims.create({
             key: 'pinky_right',
@@ -55,23 +56,23 @@ export default new Phaser.Class({
             frameRate: 6,
             repeat: -1,
         })
-        this.faceRight();
+        this.faceRight()
     },
 
     cycleDirection() {
         switch (this.direction) {
             case UP:
-                this.faceLeft();
-                break;
+                this.faceLeft()
+                break
             case DOWN:
-                this.faceRight();
-                break;
+                this.faceRight()
+                break
             case LEFT:
-                this.faceDown();
-                break;
+                this.faceDown()
+                break
             case RIGHT:
-                this.faceUp();
-                break;
+                this.faceUp()
+                break
         }
     },
 

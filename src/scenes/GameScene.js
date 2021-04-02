@@ -27,7 +27,6 @@ let blinky
 let pinky
 let inky
 let clyde
-let platforms
 
 export default class extends Phaser.Scene {
     constructor() {
@@ -75,21 +74,20 @@ export default class extends Phaser.Scene {
         pacman = new Pacman(this, 28, 36)
 
         // Controles do jogo
-        blinky = new Blinky(this)
-        pinky = new Pinky(this)
-        inky = new Inky(this)
-        clyde = new Clyde(this)
-
-        // Adicionando colisão com os fantasmas
-        this.physics.add.collider(pacman.getPlayer(), platforms)
-        this.physics.add.collider(blinky.getBody(), platforms)
-        this.physics.add.collider(pinky.getBody(), platforms)
-        this.physics.add.collider(inky.getBody(), platforms)
-        this.physics.add.collider(clyde.getBody(), platforms)
+        blinky = new Blinky(this, 132, 36)
+        pinky = new Pinky(this, 132, 64)
+        inky = new Inky(this, 36, 256)
+        clyde = new Clyde(this, 64, 230)
 
         // Adicionando colisão do mapa com pacman
         mazeLayer.setCollisionByProperty({ collides: true })
         this.physics.add.collider(pacman.getPlayer(), mazeLayer)
+
+        // Adicionando colisão com os fantasmas
+        this.physics.add.collider(blinky.getBody(), mazeLayer)
+        this.physics.add.collider(pinky.getBody(), mazeLayer)
+        this.physics.add.collider(inky.getBody(), mazeLayer)
+        this.physics.add.collider(clyde.getBody(), mazeLayer)
 
         // Controles
         this.cursors = this.input.keyboard.createCursorKeys()
