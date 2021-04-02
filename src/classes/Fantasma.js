@@ -1,22 +1,24 @@
 import Phaser from 'phaser'
 
 //  Direction consts
-const UP = 0
-const DOWN = 1
-const LEFT = 2
-const RIGHT = 3
-const VELOCITY = 150
-const EATEN = 0
-const SCATTER = 1
-const CHASE = 2
-const FRIGHTENED = 3
+const UP = 0;
+const DOWN = 1;
+const LEFT = 2;
+const RIGHT = 3;
+const VELOCITY = 150;
+const EATEN = 0;
+const SCATTER = 1;
+const CHASE = 2;
+const FRIGHTENED = 3;
 
 export default new Phaser.Class({
-    initialize: function Fantasma(scene, x, y) { // classe base dos fantasmas
+
+    initialize: function Fantasma(scene) { // classe base dos fantasmas
+
         this.state = CHASE;
+        this.direction = RIGHT;
         this.faceRight();
         this.body;
-        this.direction = RIGHT;
         this.name = 'fantasma';
     },
     getBody() {
@@ -33,34 +35,33 @@ export default new Phaser.Class({
         switch (this.direction) {
             case UP:
                 if (this.directionBlocked(UP)) {
-                    continue;
+                    break;
                 } else {
                     this.linearDist(getPosition(), getTarget());
                 }
                 break;
             case DOWN:
                 if (this.directionBlocked(DOWN)) {
-                    continue;
+                    break;
                 } else {
                     this.linearDist(getPosition(), getTarget());
                 }
                 break;
             case LEFT:
                 if (this.directionBlocked(LEFT)) {
-                    continue;
+                    break;
                 } else {
                     this.linearDist(getPosition(), getTarget());
                 }
                 break;
             case RIGHT:
                 if (this.directionBlocked(RIGHT)) {
-                    continue;
+                    break;
                 } else {
                     this.linearDist(getPosition(), getTarget());
                 }
                 break;
             default:
-                continue;
         }
     },
 
@@ -100,7 +101,7 @@ export default new Phaser.Class({
         if (this.direction !== LEFT) {
             this.direction = LEFT
             this.body.setVelocity(-VELOCITY, 0)
-            this.body.play('pacmanLeft')
+            //this.body.play('pacmanLeft')
         }
     },
 
@@ -108,7 +109,7 @@ export default new Phaser.Class({
         if (this.direction !== RIGHT) {
             this.direction = RIGHT
             this.body.setVelocity(VELOCITY, 0)
-            this.body.play('pacmanRight')
+            //this.body.play('pacmanRight')
         }
     },
 
@@ -116,7 +117,7 @@ export default new Phaser.Class({
         if (this.direction !== UP) {
             this.direction = UP
             this.body.setVelocity(0, -VELOCITY)
-            this.body.play('pacmanUp')
+            //this.body.play('pacmanUp')
         }
     },
 
@@ -124,7 +125,7 @@ export default new Phaser.Class({
         if (this.direction !== DOWN) {
             this.direction = DOWN
             this.body.setVelocity(0, VELOCITY)
-            this.body.play('pacmanDown')
+            //this.body.play('pacmanDown')
         }
     },
 })
