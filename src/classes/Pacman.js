@@ -22,7 +22,6 @@ export default new Phaser.Class({
             frameRate: 6,
             repeat: -1,
         })
-
         this.body.anims.create({
             key: 'pacmanLeft',
             frames: scene.anims.generateFrameNames('pacman', {
