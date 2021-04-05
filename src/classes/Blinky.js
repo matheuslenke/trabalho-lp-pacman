@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import Fantasma from '../classes/Fantasma'
 
 //  Direction consts
 const UP = 0
@@ -12,7 +13,7 @@ const CHASE = 2
 const FRIGHTENED = 3
 
 export default new Phaser.Class({
-    Extends: Phaser.Class.Fantasma,
+    // Extends: Phaser.Class.Fantasma,
 
     initialize: function Blinky(scene, x, y) {
         // Fantasma Vermelho

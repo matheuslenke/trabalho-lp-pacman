@@ -1,11 +1,11 @@
 import Phaser from 'phaser'
 
-//  Direction consts
+// Consts
 const UP = 0;
 const DOWN = 1;
 const LEFT = 2;
 const RIGHT = 3;
-const VELOCITY = 150;
+const VELOCITY = 1;
 const EATEN = 'eaten';
 const SCATTER = 'scatter';
 const CHASE = 'chase';
@@ -17,7 +17,7 @@ export default new Phaser.Class({
 
         this.state = CHASE;
         this.direction = RIGHT;
-        this.faceRight();
+        // this.faceRight();
         this.body;
         this.name = 'fantasma';
     },
@@ -27,42 +27,86 @@ export default new Phaser.Class({
 
     calculateTarget() {},
     getTarget() {},
-    linearDist() {},
-    directionBlocked() {},
-    getPosition() {},
+    getDirection() {
+        return this.direction;
+    },
+    linearDist(point1, point2) {},
+    indexOfMin(arr) {
+        if (arr.length === 0) {
+            return -1;
+        }
 
-    determineDirection() {
-        switch (this.direction) {
+        var min = arr[0];
+        var minIndex = 0;
+
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] < min) {
+                minIndex = i;
+                min = arr[i];
+            }
+        }
+
+        return minIndex;
+    },
+    directionBlocked(mazeLayer, position, direction) {
+        const { x, y } = position;
+        let tile, tile2;
+        switch (direction) {
             case UP:
-                if (this.directionBlocked(UP)) {
-                    break;
-                } else {
-                    this.linearDist(getPosition(), getTarget());
-                }
+                tile = mazeLayer.getTileAtWorldXY(x - 4, y - 5, true)
+                tile2 = mazeLayer.getTileAtWorldXY(x + 3, y - 5, true)
                 break;
             case DOWN:
-                if (this.directionBlocked(DOWN)) {
-                    break;
-                } else {
-                    this.linearDist(getPosition(), getTarget());
-                }
+                tile = mazeLayer.getTileAtWorldXY(x - 4, y + 4, true)
+                tile2 = mazeLayer.getTileAtWorldXY(x + 3, y + 4, true)
                 break;
             case LEFT:
-                if (this.directionBlocked(LEFT)) {
-                    break;
-                } else {
-                    this.linearDist(getPosition(), getTarget());
-                }
+                tile = mazeLayer.getTileAtWorldXY(x - 5, y - 4, true)
+                tile2 = mazeLayer.getTileAtWorldXY(x - 5, y + 3, true)
                 break;
             case RIGHT:
-                if (this.directionBlocked(RIGHT)) {
-                    break;
-                } else {
-                    this.linearDist(getPosition(), getTarget());
-                }
+                tile = mazeLayer.getTileAtWorldXY(x + 4, y - 4, true)
+                tile2 = mazeLayer.getTileAtWorldXY(x + 4, y + 3, true)
                 break;
             default:
+                return true;
         }
+        return (tile.collides || tile2.collides);
+    },
+    getPosition() {
+        return { x: this.body.x, y: this.body.y };
+    },
+
+    update(mazeLayer) {
+        // const { x, y } = this.getPosition();
+        // const target = this.getTarget();
+        // let [up_dist, down_dist, left_dist, right_dist] = [99999, 99999, 99999, 99999];
+        // if (!this.directionBlocked(mazeLayer, { x, y }, UP)) {
+        //     up_dist = this.linearDist([x, y - 16], target);
+        // }
+        // if (!this.directionBlocked(mazeLayer, { x, y }, DOWN)) {
+        //     down_dist = this.linearDist([x, y + 16], target);
+        // }
+        // if (!this.directionBlocked(mazeLayer, { x, y }, LEFT)) {
+        //     left_dist = this.linearDist([x - 16, y], target);
+        // }
+        // if (!this.directionBlocked(mazeLayer, { x, y }, RIGHT)) {
+        //     right_dist = this.linearDist([x + 16, y], target);
+        // }
+        // switch (this.indexOfMin([up_dist, down_dist, left_dist, right_dist])) {
+        //     case UP:
+        //         this.faceUp();
+        //         break;
+        //     case DOWN:
+        //         this.faceDown();
+        //         break;
+        //     case LEFT:
+        //         this.faceLeft();
+        //         break;
+        //     case RIGHT:
+        //         this.faceRight();
+        //         break;
+        // }
     },
 
     getsEaten() {
@@ -100,7 +144,7 @@ export default new Phaser.Class({
     faceLeft() {
         if (this.direction !== LEFT) {
             this.direction = LEFT
-            this.body.setVelocity(-VELOCITY, 0)
+            this.body.x -= VELOCITY;
             //this.body.play('pacmanLeft')
         }
     },
@@ -108,7 +152,7 @@ export default new Phaser.Class({
     faceRight() {
         if (this.direction !== RIGHT) {
             this.direction = RIGHT
-            this.body.setVelocity(VELOCITY, 0)
+            this.body.x += VELOCITY;
             //this.body.play('pacmanRight')
         }
     },
@@ -116,7 +160,7 @@ export default new Phaser.Class({
     faceUp() {
         if (this.direction !== UP) {
             this.direction = UP
-            this.body.setVelocity(0, -VELOCITY)
+            this.body.y -= VELOCITY;
             //this.body.play('pacmanUp')
         }
     },
@@ -124,7 +168,7 @@ export default new Phaser.Class({
     faceDown() {
         if (this.direction !== DOWN) {
             this.direction = DOWN
-            this.body.setVelocity(0, VELOCITY)
+            this.body.y += VELOCITY;
             //this.body.play('pacmanDown')
         }
     },
