@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import Fantasma from '../classes/Fantasma'
+import Fantasma from './Fantasma'
 
 //  Direction consts
 const UP = 0
@@ -13,7 +13,7 @@ const CHASE = 2
 const FRIGHTENED = 3
 
 export default new Phaser.Class({
-    // Extends: Phaser.Class.Fantasma,
+    Extends: Fantasma,
 
     initialize: function Blinky(scene, x, y) {
         // Fantasma Vermelho
@@ -57,7 +57,7 @@ export default new Phaser.Class({
             frameRate: 6,
             repeat: -1,
         })
-        this.faceRight()
+        // this.faceRight()
     },
 
     cycleDirection() {

@@ -119,13 +119,14 @@ export default class extends Phaser.Scene {
             checkHitFood()
             checkHitPowerup()
         }
+        blinky.update(mazeLayer, time, delta)
 
         // Atualiza movimento dos fantasmas
         if (time % 400 >= 0 && time % 400 <= 15) {
-            clyde.cycleDirection()
-            pinky.cycleDirection()
-            blinky.cycleDirection()
-            inky.cycleDirection()
+            // clyde.cycleDirection()
+            // pinky.cycleDirection()
+            // blinky.cycleDirection()
+            // inky.cycleDirection()
         }
     }
 }
