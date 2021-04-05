@@ -142,8 +142,7 @@ export default new Phaser.Class({
             if (tile.collides || tile2.collides) {
                 // console.log('Blocked left')
             } else {
-                this.player.play('pacmanLeft')
-                this.direction = LEFT
+                this.faceLeft()
             }
         } else if (this.nextDirection === RIGHT && this.direction !== RIGHT) {
             const tile = mazeLayer.getTileAtWorldXY(x + 4, y - 4, true)
@@ -152,8 +151,7 @@ export default new Phaser.Class({
             if (tile.collides || tile2.collides) {
                 // console.log('Blocked right')
             } else {
-                this.player.play('pacmanRight')
-                this.direction = RIGHT
+                this.faceRight()
             }
         } else if (this.nextDirection === UP && this.direction !== UP) {
             const tile = mazeLayer.getTileAtWorldXY(x - 4, y - 5, true)
@@ -162,8 +160,7 @@ export default new Phaser.Class({
             if (tile.collides || tile2.collides) {
                 // console.log('Blocked up')
             } else {
-                this.player.play('pacmanUp')
-                this.direction = UP
+                this.faceUp()
             }
         } else if (this.nextDirection === DOWN && this.direction !== DOWN) {
             const tile = mazeLayer.getTileAtWorldXY(x - 4, y + 4, true)
@@ -172,47 +169,31 @@ export default new Phaser.Class({
             if (tile.collides || tile2.collides) {
                 // console.log('Blocked down')
             } else {
-                this.player.play('pacmanDown')
-                this.direction = DOWN
+                this.faceDown()
             }
         }
     },
 
     faceLeft() {
-        if (this.direction !== LEFT) {
-            this.direction = LEFT
-            this.player.setVelocity(-VELOCITY, 0)
-            this.player.play('pacmanLeft')
-        }
+        this.direction = LEFT
+        this.player.play('pacmanLeft')
     },
 
     faceRight() {
-        if (this.direction !== RIGHT) {
-            this.direction = RIGHT
-            this.player.setVelocity(VELOCITY, 0)
-            this.player.play('pacmanRight')
-        }
+        this.direction = RIGHT
+        this.player.play('pacmanRight')
     },
 
     faceUp() {
-        if (this.direction !== UP) {
-            this.direction = UP
-            this.player.setVelocity(0, -VELOCITY)
-            this.player.play('pacmanUp')
-        }
+        this.direction = UP
+        this.player.play('pacmanUp')
     },
 
     faceDown() {
-        if (this.direction !== DOWN) {
-            this.direction = DOWN
-            this.player.setVelocity(0, VELOCITY)
-            this.player.play('pacmanDown')
-        }
+        this.direction = DOWN
+        this.player.play('pacmanDown')
     },
-    isTouchingLeft() {
-        if (this.player.body.blocked) return true
-        return false
-    },
+
     getScore() {
         return this.score
     },

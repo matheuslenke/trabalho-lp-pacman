@@ -75,9 +75,9 @@ export default class extends Phaser.Scene {
 
         // Controles do jogo
         blinky = new Blinky(this, 132, 36)
-        pinky = new Pinky(this, 132, 64)
-        inky = new Inky(this, 36, 256)
-        clyde = new Clyde(this, 64, 230)
+        // pinky = new Pinky(this, 132, 64)
+        // inky = new Inky(this, 36, 256)
+        // clyde = new Clyde(this, 64, 230)
 
         // Adicionando colisão do mapa com pacman
         mazeLayer.setCollisionByProperty({ collides: true })
@@ -85,9 +85,9 @@ export default class extends Phaser.Scene {
 
         // Adicionando colisão com os fantasmas
         this.physics.add.collider(blinky.getBody(), mazeLayer)
-        this.physics.add.collider(pinky.getBody(), mazeLayer)
-        this.physics.add.collider(inky.getBody(), mazeLayer)
-        this.physics.add.collider(clyde.getBody(), mazeLayer)
+        // this.physics.add.collider(pinky.getBody(), mazeLayer)
+        // this.physics.add.collider(inky.getBody(), mazeLayer)
+        // this.physics.add.collider(clyde.getBody(), mazeLayer)
 
         // Controles
         this.cursors = this.input.keyboard.createCursorKeys()
@@ -118,6 +118,15 @@ export default class extends Phaser.Scene {
         if (pacman.update(mazeLayer, time, delta)) {
             checkHitFood()
             checkHitPowerup()
+        }
+        if (blinky.canFaceRight(mazeLayer) === true) {
+            blinky.faceRight()
+        } else if (blinky.canFaceLeft(mazeLayer) === true) {
+            blinky.faceLeft()
+        } else if (blinky.canFaceUp(mazeLayer) === true) {
+            blinky.faceUp()
+        } else if (blinky.canFaceDown(mazeLayer) === true) {
+            blinky.faceDown()
         }
         blinky.update(mazeLayer, time, delta)
 

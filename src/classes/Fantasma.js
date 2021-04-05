@@ -14,7 +14,6 @@ const FRIGHTENED = 'frightened'
 export default new Phaser.Class({
     initialize: function Fantasma(scene) {
         // classe base dos fantasmas
-
         this.state = CHASE
         this.direction = RIGHT
         // this.faceRight();
@@ -36,7 +35,6 @@ export default new Phaser.Class({
         } else if (this.direction === RIGHT) {
             const tile = mazeLayer.getTileAtWorldXY(x + 4, y - 4, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x + 4, y + 3, true)
-            // console.log('Tile 1', tile, 'Tile2', tile2)
             if (!(tile.collides || tile2.collides)) {
                 this.body.x += VELOCITY
             }
@@ -83,7 +81,8 @@ export default new Phaser.Class({
     },
     directionBlocked(mazeLayer, position, direction) {
         const { x, y } = position
-        let tile, tile2
+        let tile
+        let tile2
         switch (direction) {
             case UP:
                 tile = mazeLayer.getTileAtWorldXY(x - 4, y - 5, true)
@@ -108,38 +107,6 @@ export default new Phaser.Class({
     },
     getPosition() {
         return { x: this.body.x, y: this.body.y }
-    },
-
-    update(mazeLayer) {
-        // const { x, y } = this.getPosition();
-        // const target = this.getTarget();
-        // let [up_dist, down_dist, left_dist, right_dist] = [99999, 99999, 99999, 99999];
-        // if (!this.directionBlocked(mazeLayer, { x, y }, UP)) {
-        //     up_dist = this.linearDist([x, y - 16], target);
-        // }
-        // if (!this.directionBlocked(mazeLayer, { x, y }, DOWN)) {
-        //     down_dist = this.linearDist([x, y + 16], target);
-        // }
-        // if (!this.directionBlocked(mazeLayer, { x, y }, LEFT)) {
-        //     left_dist = this.linearDist([x - 16, y], target);
-        // }
-        // if (!this.directionBlocked(mazeLayer, { x, y }, RIGHT)) {
-        //     right_dist = this.linearDist([x + 16, y], target);
-        // }
-        // switch (this.indexOfMin([up_dist, down_dist, left_dist, right_dist])) {
-        //     case UP:
-        //         this.faceUp();
-        //         break;
-        //     case DOWN:
-        //         this.faceDown();
-        //         break;
-        //     case LEFT:
-        //         this.faceLeft();
-        //         break;
-        //     case RIGHT:
-        //         this.faceRight();
-        //         break;
-        // }
     },
 
     getsEaten() {
@@ -174,35 +141,56 @@ export default new Phaser.Class({
         }
     },
 
-    faceLeft() {
-        if (this.direction !== LEFT) {
-            this.direction = LEFT
-            this.body.x -= VELOCITY
-            //this.body.play('pacmanLeft')
+    canFaceLeft(mazeLayer) {
+        if (this.direction === RIGHT) {
+            return false
         }
+        const { x, y } = this.body
+        const tile = mazeLayer.getTileAtWorldXY(x - 5, y - 4, true)
+        const tile2 = mazeLayer.getTileAtWorldXY(x - 5, y + 3, true)
+        // console.log('Tile 1', tile, 'Tile2', tile2)
+        if (tile.collides || tile2.collides) {
+            return false
+        }
+        return true
     },
-
-    faceRight() {
-        if (this.direction !== RIGHT) {
-            this.direction = RIGHT
-            this.body.x += VELOCITY
-            //this.body.play('pacmanRight')
+    canFaceRight(mazeLayer) {
+        if (this.direction === LEFT) {
+            return false
         }
+        const { x, y } = this.body
+        const tile = mazeLayer.getTileAtWorldXY(x + 4, y - 4, true)
+        const tile2 = mazeLayer.getTileAtWorldXY(x + 4, y + 3, true)
+        // console.log('Tile 1', tile, 'Tile2', tile2)
+        if (tile.collides || tile2.collides) {
+            return false
+        }
+        return true
     },
-
-    faceUp() {
-        if (this.direction !== UP) {
-            this.direction = UP
-            this.body.y -= VELOCITY
-            //this.body.play('pacmanUp')
+    canFaceUp(mazeLayer) {
+        if (this.direction === DOWN) {
+            return false
         }
+        const { x, y } = this.body
+        const tile = mazeLayer.getTileAtWorldXY(x - 4, y - 5, true)
+        const tile2 = mazeLayer.getTileAtWorldXY(x + 3, y - 5, true)
+        // console.log('Tile 1', tile, 'Tile2', tile2)
+        if (tile.collides || tile2.collides) {
+            return false
+        }
+        return true
     },
-
-    faceDown() {
-        if (this.direction !== DOWN) {
-            this.direction = DOWN
-            this.body.y += VELOCITY
-            //this.body.play('pacmanDown')
+    canFaceDown(mazeLayer) {
+        if (this.direction === UP) {
+            return false
         }
+        const { x, y } = this.body
+        const tile = mazeLayer.getTileAtWorldXY(x - 4, y + 4, true)
+        const tile2 = mazeLayer.getTileAtWorldXY(x + 3, y + 4, true)
+        // console.log('Tile 1', tile, 'Tile2', tile2)
+        if (tile.collides || tile2.collides) {
+            return false
+        }
+        return true
     },
 })

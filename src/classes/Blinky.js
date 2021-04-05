@@ -20,6 +20,8 @@ export default new Phaser.Class({
         this.name = 'fantasma'
         this.body = scene.physics.add.sprite(x, y, 'blinky').setScale(0.5)
         this.body.setDisplaySize(16, 16)
+        this.nextDirection = RIGHT
+        this.direction = RIGHT
 
         this.body.anims.create({
             key: 'blinky_right',
@@ -82,34 +84,22 @@ export default new Phaser.Class({
     },
 
     faceLeft() {
-        if (this.direction !== LEFT) {
-            this.direction = LEFT
-            this.body.setVelocity(-VELOCITY, 0)
-            this.body.play('blinky_left')
-        }
+        this.direction = LEFT
+        this.body.play('blinky_left')
     },
 
     faceRight() {
-        if (this.direction !== RIGHT) {
-            this.direction = RIGHT
-            this.body.setVelocity(VELOCITY, 0)
-            this.body.play('blinky_right')
-        }
+        this.direction = RIGHT
+        this.body.play('blinky_right')
     },
 
     faceUp() {
-        if (this.direction !== UP) {
-            this.direction = UP
-            this.body.setVelocity(0, -VELOCITY)
-            this.body.play('blinky_up')
-        }
+        this.direction = UP
+        this.body.play('blinky_up')
     },
 
     faceDown() {
-        if (this.direction !== DOWN) {
-            this.direction = DOWN
-            this.body.setVelocity(0, VELOCITY)
-            this.body.play('blinky_down')
-        }
+        this.direction = DOWN
+        this.body.play('blinky_down')
     },
 })
