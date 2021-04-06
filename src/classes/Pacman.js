@@ -12,7 +12,7 @@ export default new Phaser.Class({
     initialize: function Pacman(scene, x, y) {
         this.alive = true
         this.score = 0
-        this.lifes = 3
+        this.lives = 3
         this.powerup = 0
         this.nextDirection = RIGHT
         this.direction = RIGHT
@@ -66,6 +66,12 @@ export default new Phaser.Class({
         // this.player.setCollideWorldBounds(true)
         this.player.play('pacmanRight')
         // this.faceRight()
+    },
+
+    startPosition(x, y) {
+        this.player.x = x
+        this.player.y = y
+        this.player.play('pacmanRight')
     },
 
     getPlayer() {
@@ -196,6 +202,16 @@ export default new Phaser.Class({
 
     getScore() {
         return this.score
+    },
+    hitGhost() {
+        console.log('Hit')
+        this.alive = false
+        this.player.play('pacmanDie')
+        this.lives -= 1
+        if (this.lives === 0) {
+            return true
+        }
+        return false
     },
     hitFood() {
         this.score += 100
