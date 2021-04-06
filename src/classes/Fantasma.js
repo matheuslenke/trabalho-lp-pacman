@@ -79,24 +79,49 @@ export default new Phaser.Class({
 
         return minIndex
     },
-    directionBlocked(mazeLayer, position, direction) {
-        const { x, y } = position
+    directionUp() {
+        return UP;
+    },
+    directionDown() {
+        return DOWN;
+    },
+    directionLeft() {
+        return LEFT;
+    },
+    directionRight() {
+        return RIGHT;
+    },
+    directionBlocked(mazeLayer, direction) {
+        const { x, y } = this.getBody();
         let tile
         let tile2
         switch (direction) {
             case UP:
+                if (this.getDirection() == DOWN) {
+                    return true;
+                }
                 tile = mazeLayer.getTileAtWorldXY(x - 4, y - 5, true)
                 tile2 = mazeLayer.getTileAtWorldXY(x + 3, y - 5, true)
                 break
             case DOWN:
+                if (this.getDirection() == UP) {
+                    return true;
+                }
                 tile = mazeLayer.getTileAtWorldXY(x - 4, y + 4, true)
                 tile2 = mazeLayer.getTileAtWorldXY(x + 3, y + 4, true)
                 break
             case LEFT:
+                if (this.getDirection() == RIGHT) {
+                    return true;
+                }
+                console.log(`${this.getDirection()}`);
                 tile = mazeLayer.getTileAtWorldXY(x - 5, y - 4, true)
                 tile2 = mazeLayer.getTileAtWorldXY(x - 5, y + 3, true)
                 break
             case RIGHT:
+                if (this.getDirection() == LEFT) {
+                    return true;
+                }
                 tile = mazeLayer.getTileAtWorldXY(x + 4, y - 4, true)
                 tile2 = mazeLayer.getTileAtWorldXY(x + 4, y + 3, true)
                 break

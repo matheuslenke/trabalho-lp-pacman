@@ -119,13 +119,13 @@ export default class extends Phaser.Scene {
             checkHitFood()
             checkHitPowerup()
         }
-        if (blinky.canFaceRight(mazeLayer) === true) {
+        if (!blinky.directionBlocked(mazeLayer, blinky.directionRight())) {
             blinky.faceRight()
-        } else if (blinky.canFaceLeft(mazeLayer) === true) {
+        } else if (!blinky.directionBlocked(mazeLayer, blinky.directionLeft())) {
             blinky.faceLeft()
-        } else if (blinky.canFaceUp(mazeLayer) === true) {
+        } else if (!blinky.directionBlocked(mazeLayer, blinky.directionUp())) {
             blinky.faceUp()
-        } else if (blinky.canFaceDown(mazeLayer) === true) {
+        } else if (!blinky.directionBlocked(mazeLayer, blinky.directionDown())) {
             blinky.faceDown()
         }
         blinky.update(mazeLayer, time, delta)
@@ -156,6 +156,7 @@ function hitFood(tile) {
     updateText()
     return false
 }
+
 function checkHitPowerup() {
     // Checa se está em cima de uma food
     const { x, y } = pacman.player
