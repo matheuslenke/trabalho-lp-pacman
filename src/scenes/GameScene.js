@@ -1,6 +1,5 @@
 import Phaser, { Physics } from 'phaser'
 
-import FoodImg from '../../assets/images/other/apple.png'
 import PacmanSprite from '../../assets/images/Sprite_Sheets/pacman.png'
 import BlinkySprite from '../../assets/images/Sprite_Sheets/blinky.png'
 import PinkySprite from '../../assets/images/Sprite_Sheets/pinky.png'
@@ -39,7 +38,6 @@ export default class extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('food', FoodImg)
         this.load.spritesheet('pacman', PacmanSprite, {
             frameWidth: 16,
             frameHeight: 16,
@@ -84,6 +82,9 @@ export default class extends Phaser.Scene {
     update(time, delta) {
         if (!pacman.alive) {
             return
+        }
+        if (pacman.hasWin() === true) {
+            this.scene.start('WinScene')
         }
         this.frameTime += delta
         // Checa se não está numa posição quebrada
@@ -146,7 +147,7 @@ export default class extends Phaser.Scene {
         powerupsLayer = map.createLayer('Powerups', tileset, 0, 24)
 
         // Criando o personagem
-        pacman = new Pacman(this, 202, 140, walkMusic)
+        pacman = new Pacman(this, 202, 140, walkMusic, 246)
 
         // Controles do jogo
         blinky = new Blinky(this, 132, 36)
@@ -189,7 +190,7 @@ export default class extends Phaser.Scene {
     }
 
     hitGhost(ghost, pacmanSprite) {
-        if (pacman.alive) {
+        if (pacman.alive && !pacman.powerup) {
             this.physics.pause()
             const dieSound = this.sound.add('pacmanDie')
             dieSound.play()

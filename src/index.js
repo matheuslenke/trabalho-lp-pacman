@@ -5,6 +5,7 @@ import BootScene from './scenes/BootScene'
 import TitleScene from './scenes/TitleScene'
 import GameScene from './scenes/GameScene'
 import GameOverScene from './scenes/GameOverScene'
+import WinScene from './scenes/WinScene'
 
 // const gameSettings = {
 //     playerSpeed: 100,
@@ -46,7 +47,7 @@ const config = {
     },
     backgroundColor: '#000',
     parent: 'pacman',
-    scene: [BootScene, TitleScene, GameScene, GameOverScene],
+    scene: [BootScene, TitleScene, GameScene, GameOverScene, WinScene],
 }
 
 // eslint-disable-next-line no-unused-vars
