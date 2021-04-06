@@ -9,13 +9,15 @@ const NONE = 4
 const VELOCITY = 1
 
 export default new Phaser.Class({
-    initialize: function Pacman(scene, x, y) {
+    initialize: function Pacman(scene, x, y, walkMusic) {
         this.alive = true
         this.score = 0
         this.lives = 3
         this.powerup = 0
         this.nextDirection = RIGHT
         this.direction = RIGHT
+        this.walkMusic = walkMusic
+        this.playingWalkMusic = false
 
         this.player = scene.physics.add.sprite(x, y, 'pacman').setScale(0.5)
         this.player.setDisplaySize(16, 16)
@@ -107,15 +109,19 @@ export default new Phaser.Class({
         if (this.direction === LEFT) {
             const tile = mazeLayer.getTileAtWorldXY(x - 5, y - 4, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x - 5, y + 3, true)
-            // console.log('Tile 1', tile, 'Tile2', tile2)
-            if (!(tile.collides || tile2.collides)) {
+            if (!tile && !tile2) {
+                this.player.x -= VELOCITY
+                setTimeout(this.teleportToRight.bind(this), 50)
+            } else if (!(tile.collides || tile2.collides)) {
                 this.player.x -= VELOCITY
             }
         } else if (this.direction === RIGHT) {
             const tile = mazeLayer.getTileAtWorldXY(x + 4, y - 4, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x + 4, y + 3, true)
-            // console.log('Tile 1', tile, 'Tile2', tile2)
-            if (!(tile.collides || tile2.collides)) {
+            if (!tile && !tile2) {
+                this.player.x += VELOCITY
+                setTimeout(this.teleportToLeft.bind(this), 50)
+            } else if (!(tile.collides || tile2.collides)) {
                 this.player.x += VELOCITY
             }
         } else if (this.direction === UP) {
@@ -134,6 +140,12 @@ export default new Phaser.Class({
             }
         }
         return true
+    },
+    teleportToLeft() {
+        this.player.x = -4
+    },
+    teleportToRight() {
+        this.player.x = 228
     },
 
     turnDirection(mazeLayer) {
@@ -215,6 +227,21 @@ export default new Phaser.Class({
     },
     hitFood() {
         this.score += 100
+        if (this.playingWalkMusic === false) {
+            this.walkMusic.play({
+                duration: 0.5506875,
+                rate: 1,
+                delay: 0,
+            })
+            this.playingWalkMusic = true
+            this.walkMusic.once(
+                Phaser.Sound.Events.COMPLETE,
+                () => {
+                    this.playingWalkMusic = false
+                },
+                this
+            )
+        }
     },
     hitPowerup() {
         this.score += 1000

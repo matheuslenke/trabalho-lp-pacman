@@ -67,6 +67,7 @@ export default class extends Phaser.Scene {
         // Audios
         this.load.audio('opening', '../../assets/audio/opening.mp3')
         this.load.audio('pacmanDie', '../../assets/audio/pacmanDie.mp3')
+        this.load.audio('pacmanWalk', '../../assets/audio/wakawaka.mp3')
     }
 
     create() {
@@ -125,16 +126,17 @@ export default class extends Phaser.Scene {
 
     startGame() {
         // Tocar a música de intro
-        this.scene.pause()
-        const openingMusic = this.sound.add('opening')
-        openingMusic.play()
-        openingMusic.once(
-            Phaser.Sound.Events.COMPLETE,
-            () => {
-                this.scene.resume()
-            },
-            this
-        )
+        // this.scene.pause()
+        // const openingMusic = this.sound.add('opening')
+        // openingMusic.play()
+        // openingMusic.once(
+        //     Phaser.Sound.Events.COMPLETE,
+        //     () => {
+        //         this.scene.resume()
+        //     },
+        //     this
+        // )
+        const walkMusic = this.sound.add('pacmanWalk')
         // Criação do labirinto
         map = this.make.tilemap({ key: 'map' })
         const tileset = map.addTilesetImage('MazeTilemap', 'tiles')
@@ -144,7 +146,7 @@ export default class extends Phaser.Scene {
         powerupsLayer = map.createLayer('Powerups', tileset, 0, 24)
 
         // Criando o personagem
-        pacman = new Pacman(this, 28, 36)
+        pacman = new Pacman(this, 202, 140, walkMusic)
 
         // Controles do jogo
         blinky = new Blinky(this, 132, 36)
