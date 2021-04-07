@@ -80,7 +80,7 @@ export default class extends Phaser.Scene {
         blinky = new Blinky(this, 132, 36)
         pinky = new Pinky(this, 132, 64)
         inky = new Inky(this, 36, 256)
-        clyde = new Clyde(this, 64, 230)
+        clyde = new Clyde(this, 52, 230)
 
         // Adicionando colisão do mapa com pacman
         mazeLayer.setCollisionByProperty({ collides: true })
@@ -122,13 +122,13 @@ export default class extends Phaser.Scene {
             checkHitFood()
             checkHitPowerup()
         }
-        blinky.calculateRoute(mazeLayer, pacman.getPosition());
+        blinky.calculateRoute(mazeLayer, pacman);
         blinky.update(mazeLayer, time, delta)
-        pinky.calculateRoute(mazeLayer, pacman.getPosition());
+        pinky.calculateRoute(mazeLayer, pacman);
         pinky.update(mazeLayer, time, delta)
-        inky.calculateRoute(mazeLayer, pacman.getPosition());
+        inky.calculateRoute(mazeLayer, pacman);
         inky.update(mazeLayer, time, delta)
-        clyde.calculateRoute(mazeLayer, pacman.getPosition());
+        clyde.calculateRoute(mazeLayer, pacman);
         clyde.update(mazeLayer, time, delta)
 
         // Desenha linha dos fantasmas até seus alvos
