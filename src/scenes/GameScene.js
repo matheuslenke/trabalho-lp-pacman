@@ -22,6 +22,7 @@ let mazeLayer
 let foodLayer
 let powerupsLayer
 let map
+let gfx
 let scoreText
 let blinky
 let pinky
@@ -70,14 +71,16 @@ export default class extends Phaser.Scene {
         foodLayer = map.createLayer('Food', tileset, 0, 24)
         powerupsLayer = map.createLayer('Powerups', tileset, 0, 24)
 
+        gfx = this.add.graphics()
+
         // Criando o personagem
         pacman = new Pacman(this, 28, 36)
 
         // Controles do jogo
         blinky = new Blinky(this, 132, 36)
-        // pinky = new Pinky(this, 132, 64)
-        // inky = new Inky(this, 36, 256)
-        // clyde = new Clyde(this, 64, 230)
+        pinky = new Pinky(this, 132, 64)
+        inky = new Inky(this, 36, 256)
+        clyde = new Clyde(this, 64, 230)
 
         // Adicionando colisão do mapa com pacman
         mazeLayer.setCollisionByProperty({ collides: true })
@@ -85,9 +88,9 @@ export default class extends Phaser.Scene {
 
         // Adicionando colisão com os fantasmas
         this.physics.add.collider(blinky.getBody(), mazeLayer)
-        // this.physics.add.collider(pinky.getBody(), mazeLayer)
-        // this.physics.add.collider(inky.getBody(), mazeLayer)
-        // this.physics.add.collider(clyde.getBody(), mazeLayer)
+        this.physics.add.collider(pinky.getBody(), mazeLayer)
+        this.physics.add.collider(inky.getBody(), mazeLayer)
+        this.physics.add.collider(clyde.getBody(), mazeLayer)
 
         // Controles
         this.cursors = this.input.keyboard.createCursorKeys()
@@ -119,17 +122,25 @@ export default class extends Phaser.Scene {
             checkHitFood()
             checkHitPowerup()
         }
-        //if (!blinky.directionBlocked(mazeLayer, blinky.directionRight()) && blinky.getDirection() !== blinky.directionRight()) {
-        //    blinky.faceRight()
-        //} else if (!blinky.directionBlocked(mazeLayer, blinky.directionLeft())) {
-        //    blinky.faceLeft()
-        //} else if (!blinky.directionBlocked(mazeLayer, blinky.directionUp())) {
-        //    blinky.faceUp()
-        //} else if (!blinky.directionBlocked(mazeLayer, blinky.directionDown())) {
-        //    blinky.faceDown()
-        //}
         blinky.calculateRoute(mazeLayer, pacman.getPosition());
         blinky.update(mazeLayer, time, delta)
+        pinky.calculateRoute(mazeLayer, pacman.getPosition());
+        pinky.update(mazeLayer, time, delta)
+        inky.calculateRoute(mazeLayer, pacman.getPosition());
+        inky.update(mazeLayer, time, delta)
+        clyde.calculateRoute(mazeLayer, pacman.getPosition());
+        clyde.update(mazeLayer, time, delta)
+
+        // Desenha linha dos fantasmas até seus alvos
+        gfx.clear()
+            .lineStyle(1, 0xff3300)
+            .lineBetween(blinky.getPosition().x, blinky.getPosition().y, blinky.getTarget().x, blinky.getTarget().y)
+            .lineStyle(1, 0xeb88df)
+            .lineBetween(pinky.getPosition().x, pinky.getPosition().y, pinky.getTarget().x, pinky.getTarget().y)
+            .lineStyle(1, 0x88e8eb)
+            .lineBetween(inky.getPosition().x, inky.getPosition().y, inky.getTarget().x, inky.getTarget().y)
+            .lineStyle(1, 0xecbf65)
+            .lineBetween(clyde.getPosition().x, clyde.getPosition().y, clyde.getTarget().x, clyde.getTarget().y)
 
         // Atualiza movimento dos fantasmas
         if (time % 400 >= 0 && time % 400 <= 15) {

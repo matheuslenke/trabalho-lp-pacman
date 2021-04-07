@@ -1,24 +1,15 @@
 import Phaser from 'phaser'
-
-//  Direction consts
-const UP = 0
-const DOWN = 1
-const LEFT = 2
-const RIGHT = 3
-const VELOCITY = 100
-const EATEN = 0
-const SCATTER = 1
-const CHASE = 2
-const FRIGHTENED = 3
+import Fantasma from './Fantasma'
 
 export default new Phaser.Class({
-    Extends: Phaser.Class.Fantasma,
+    Extends: Fantasma,
 
     initialize: function Pinky(scene, x, y) {
-        // Fantasma Vermelho
-        this.name = 'fantasma'
+        // Fantasma Rosa
+        this.name = 'Pinky'
         this.body = scene.physics.add.sprite(x, y, 'pinky').setScale(0.5)
         this.body.setDisplaySize(16, 16)
+        this.direction = this.directionRight();
 
         this.body.anims.create({
             key: 'pinky_right',
@@ -56,59 +47,27 @@ export default new Phaser.Class({
             frameRate: 6,
             repeat: -1,
         })
-        this.faceRight()
+        // this.faceRight()
+    },
+    setTarget(pacman_position) {
+        this.target = pacman_position;
     },
 
-    cycleDirection() {
-        switch (this.direction) {
-            case UP:
-                this.faceLeft()
-                break
-            case DOWN:
-                this.faceRight()
-                break
-            case LEFT:
-                this.faceDown()
-                break
-            case RIGHT:
-                this.faceUp()
-                break
+    playAnimation(animation) {
+        switch (animation) {
+            case this.directionUp():
+                this.getBody().play('pinky_up');
+                break;
+            case this.directionDown():
+                this.getBody().play('pinky_down');
+                break;
+            case this.directionLeft():
+                this.getBody().play('pinky_left');
+                break;
+            case this.directionRight():
+                this.getBody().play('pinky_right');
+                break;
         }
     },
 
-    getBody() {
-        return this.body
-    },
-
-    faceLeft() {
-        if (this.direction !== LEFT) {
-            this.direction = LEFT
-            this.body.setVelocity(-VELOCITY, 0)
-            this.body.play('pinky_left')
-        }
-    },
-
-    faceRight() {
-        if (this.direction !== RIGHT) {
-            this.direction = RIGHT
-            this.body.setVelocity(VELOCITY, 0)
-            this.body.play('pinky_right')
-        }
-    },
-
-    faceUp() {
-        if (this.direction !== UP) {
-            this.direction = UP
-            this.body.setVelocity(0, -VELOCITY)
-            this.body.play('pinky_up')
-        }
-    },
-
-    faceDown() {
-        if (this.direction !== DOWN) {
-            this.direction = DOWN
-            this.body.setVelocity(0, VELOCITY)
-            this.body.play('pinky_down')
-        }
-    },
 })

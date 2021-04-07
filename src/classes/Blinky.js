@@ -1,17 +1,6 @@
 import Phaser from 'phaser'
 import Fantasma from './Fantasma'
 
-//  Direction consts
-const UP = 0
-const DOWN = 1
-const LEFT = 2
-const RIGHT = 3
-const VELOCITY = 100
-const EATEN = 'eaten'
-const SCATTER = 'scatter'
-const CHASE = 'chase'
-const FRIGHTENED = 'frightened'
-
 export default new Phaser.Class({
     Extends: Fantasma,
 
@@ -20,7 +9,6 @@ export default new Phaser.Class({
         this.name = 'Blinky'
         this.body = scene.physics.add.sprite(x, y, 'blinky').setScale(0.5)
         this.body.setDisplaySize(16, 16)
-        // this.nextDirection = this.directionRight();
         this.direction = this.directionRight();
 
         this.body.anims.create({
@@ -60,23 +48,6 @@ export default new Phaser.Class({
             repeat: -1,
         })
         // this.faceRight()
-    },
-
-    cycleDirection() {
-        switch (this.direction) {
-            case UP:
-                this.faceLeft()
-                break
-            case DOWN:
-                this.faceRight()
-                break
-            case LEFT:
-                this.faceDown()
-                break
-            case RIGHT:
-                this.faceUp()
-                break
-        }
     },
     setTarget(pacman_position) {
         this.target = pacman_position;
