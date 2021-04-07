@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import Pacman from './Pacman'
 
 // Consts
 const UP = 0
@@ -61,13 +62,13 @@ export default new Phaser.Class({
         }
         return true
     },
-    setTarget(pacman_position) {},
+    setTarget(pacman) {},
     getTarget() {
         return this.target;
     },
 
-    calculateRoute(mazeLayer, pacman_position) {
-        this.setTarget(pacman_position);
+    calculateRoute(mazeLayer, pacman) {
+        this.setTarget(pacman);
         let [up_dist, left_dist, down_dist, right_dist] = [99999999, 99999999, 99999999, 99999999];
         const { x, y } = this.getPosition();
         if (!this.directionBlocked(mazeLayer, this.directionRight())) {
