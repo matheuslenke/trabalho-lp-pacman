@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import Fantasma from './Fantasma'
+import Pacman from './Pacman'
 
 export default new Phaser.Class({
     Extends: Fantasma,
@@ -10,6 +11,7 @@ export default new Phaser.Class({
         this.body = scene.physics.add.sprite(x, y, 'blinky').setScale(0.5)
         this.body.setDisplaySize(16, 16)
         this.direction = this.directionRight();
+        this.startChasing();
 
         this.body.anims.create({
             key: 'blinky_right',
@@ -50,7 +52,22 @@ export default new Phaser.Class({
         // this.faceRight()
     },
     setTarget(pacman) {
-        this.target = pacman.getPosition();
+        switch (this.getState()) {
+            case this.stateEaten():
+
+                break;
+            case this.stateScatter():
+                this.target = { x: 200, y: -8 };
+                break;
+            case this.stateChase():
+                this.target = pacman.getPosition();
+                break;
+            case this.stateFrightened():
+
+                break;
+            default:
+                this.target = { x: 200, y: -8 };
+        }
     },
 
     playAnimation(animation) {
@@ -66,6 +83,9 @@ export default new Phaser.Class({
                 break;
             case this.directionRight():
                 this.getBody().play('blinky_right');
+                break;
+            case this.stateFrightened():
+
                 break;
         }
     },

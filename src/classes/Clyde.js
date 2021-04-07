@@ -9,8 +9,7 @@ export default new Phaser.Class({
         this.name = 'Clyde'
         this.body = scene.physics.add.sprite(x, y, 'clyde').setScale(0.5)
         this.body.setDisplaySize(16, 16)
-        this.direction = this.directionRight();
-
+        this.startChasing();
         this.body.anims.create({
             key: 'clyde_right',
             frames: scene.anims.generateFrameNames('clyde', {
@@ -47,10 +46,28 @@ export default new Phaser.Class({
             frameRate: 6,
             repeat: -1,
         })
-        // this.faceRight()
     },
     setTarget(pacman) {
-        this.target = pacman.getPosition();
+        switch (this.getState()) {
+            case this.stateEaten():
+
+                break;
+            case this.stateScatter():
+                this.target = { x: 4, y: 276 };
+                break;
+            case this.stateChase():
+                if (this.linearDist(this.getPosition(), pacman.getPosition()) >= (64 * 64)) {
+                    this.target = pacman.getPosition();
+                } else {
+                    this.target = { x: 4, y: 276 };
+                }
+                break;
+            case this.stateFrightened():
+
+                break;
+            default:
+                this.target = { x: 4, y: 276 };
+        }
     },
 
     playAnimation(animation) {

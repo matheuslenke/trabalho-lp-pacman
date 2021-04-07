@@ -1,5 +1,4 @@
 import Phaser from 'phaser'
-import Pacman from './Pacman'
 
 // Consts
 const UP = 0
@@ -62,13 +61,12 @@ export default new Phaser.Class({
         }
         return true
     },
-    setTarget(pacman) {},
+    setTarget() {},
     getTarget() {
         return this.target;
     },
 
-    calculateRoute(mazeLayer, pacman) {
-        this.setTarget(pacman);
+    calculateRoute(mazeLayer) {
         let [up_dist, left_dist, down_dist, right_dist] = [99999999, 99999999, 99999999, 99999999];
         const { x, y } = this.getPosition();
         if (!this.directionBlocked(mazeLayer, this.directionRight())) {
@@ -133,6 +131,18 @@ export default new Phaser.Class({
     directionRight() {
         return RIGHT;
     },
+    stateEaten() {
+        return EATEN;
+    },
+    stateScatter() {
+        return SCATTER;
+    },
+    stateChase() {
+        return CHASE;
+    },
+    stateFrightened() {
+        return FRIGHTENED;
+    },
     directionBlocked(mazeLayer, direction) {
         const { x, y } = this.getBody();
         let tile
@@ -176,11 +186,15 @@ export default new Phaser.Class({
     },
 
     getDirection() {
-        return this.direction
+        return this.direction;
     },
 
     getBody() {
-        return this.body
+        return this.body;
+    },
+
+    getState() {
+        return this.state;
     },
 
     faceLeft() {

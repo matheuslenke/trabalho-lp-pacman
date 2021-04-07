@@ -122,13 +122,17 @@ export default class extends Phaser.Scene {
             checkHitFood()
             checkHitPowerup()
         }
-        blinky.calculateRoute(mazeLayer, pacman);
+        blinky.setTarget(pacman)
+        blinky.calculateRoute(mazeLayer)
         blinky.update(mazeLayer, time, delta)
-        pinky.calculateRoute(mazeLayer, pacman);
+        pinky.setTarget(pacman)
+        pinky.calculateRoute(mazeLayer)
         pinky.update(mazeLayer, time, delta)
-        inky.calculateRoute(mazeLayer, pacman);
+        inky.setTarget(pacman, blinky)
+        inky.calculateRoute(mazeLayer)
         inky.update(mazeLayer, time, delta)
-        clyde.calculateRoute(mazeLayer, pacman);
+        clyde.setTarget(pacman)
+        clyde.calculateRoute(mazeLayer)
         clyde.update(mazeLayer, time, delta)
 
         // Desenha linha dos fantasmas até seus alvos

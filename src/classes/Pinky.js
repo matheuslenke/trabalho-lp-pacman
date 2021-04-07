@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import Fantasma from './Fantasma'
+import Pacman from './Pacman'
 
 export default new Phaser.Class({
     Extends: Fantasma,
@@ -10,6 +11,7 @@ export default new Phaser.Class({
         this.body = scene.physics.add.sprite(x, y, 'pinky').setScale(0.5)
         this.body.setDisplaySize(16, 16)
         this.direction = this.directionRight();
+        this.startChasing();
 
         this.body.anims.create({
             key: 'pinky_right',
@@ -50,31 +52,46 @@ export default new Phaser.Class({
         // this.faceRight()
     },
     setTarget(pacman) {
-        switch (pacman.getDirection()) {
-            case pacman.directionUp():
-                this.target = {
-                    x: pacman.getPosition().x - 2 * 16,
-                    y: pacman.getPosition().y - 2 * 16
-                };
+        switch (this.getState()) {
+            case this.stateEaten():
+
                 break;
-            case pacman.directionDown():
-                this.target = {
-                    x: pacman.getPosition().x,
-                    y: pacman.getPosition().y + 2 * 16
-                };
+            case this.stateScatter():
+                this.target = { x: 24, y: -8 };
                 break;
-            case pacman.directionLeft():
-                this.target = {
-                    x: pacman.getPosition().x - 2 * 16,
-                    y: pacman.getPosition().y
-                };
+            case this.stateChase():
+                switch (pacman.getDirection()) {
+                    case pacman.directionUp():
+                        this.target = {
+                            x: pacman.getPosition().x - 2 * 16,
+                            y: pacman.getPosition().y - 2 * 16
+                        };
+                        break;
+                    case pacman.directionDown():
+                        this.target = {
+                            x: pacman.getPosition().x,
+                            y: pacman.getPosition().y + 2 * 16
+                        };
+                        break;
+                    case pacman.directionLeft():
+                        this.target = {
+                            x: pacman.getPosition().x - 2 * 16,
+                            y: pacman.getPosition().y
+                        };
+                        break;
+                    case pacman.directionRight():
+                        this.target = {
+                            x: pacman.getPosition().x + 2 * 16,
+                            y: pacman.getPosition().y
+                        };
+                        break;
+                }
                 break;
-            case pacman.directionRight():
-                this.target = {
-                    x: pacman.getPosition().x + 2 * 16,
-                    y: pacman.getPosition().y
-                };
+            case this.stateFrightened():
+
                 break;
+            default:
+                this.target = { x: 24, y: -8 };
         }
     },
 
