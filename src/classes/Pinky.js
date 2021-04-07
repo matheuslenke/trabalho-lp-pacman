@@ -49,8 +49,33 @@ export default new Phaser.Class({
         })
         // this.faceRight()
     },
-    setTarget(pacman_position) {
-        this.target = pacman_position;
+    setTarget(pacman) {
+        switch (pacman.getDirection()) {
+            case pacman.directionUp():
+                this.target = {
+                    x: pacman.getPosition().x - 2 * 16,
+                    y: pacman.getPosition().y - 2 * 16
+                };
+                break;
+            case pacman.directionDown():
+                this.target = {
+                    x: pacman.getPosition().x,
+                    y: pacman.getPosition().y + 2 * 16
+                };
+                break;
+            case pacman.directionLeft():
+                this.target = {
+                    x: pacman.getPosition().x - 2 * 16,
+                    y: pacman.getPosition().y
+                };
+                break;
+            case pacman.directionRight():
+                this.target = {
+                    x: pacman.getPosition().x + 2 * 16,
+                    y: pacman.getPosition().y
+                };
+                break;
+        }
     },
 
     playAnimation(animation) {
