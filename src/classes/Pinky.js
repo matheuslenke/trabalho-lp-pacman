@@ -10,9 +10,8 @@ export default new Phaser.Class({
         this.name = 'Pinky'
         this.body = scene.physics.add.sprite(x, y, 'pinky').setScale(0.5)
         this.body.setDisplaySize(16, 16)
-        this.direction = this.directionRight();
         this.startChasing();
-
+        //this.getsEaten();
         this.body.anims.create({
             key: 'pinky_right',
             frames: scene.anims.generateFrameNames('pinky', {
@@ -49,9 +48,50 @@ export default new Phaser.Class({
             frameRate: 6,
             repeat: -1,
         })
+        this.body.anims.create({
+            key: 'frightened',
+            frames: scene.anims.generateFrameNames('blinky', {
+                start: 8,
+                end: 9,
+            }),
+            frameRate: 6,
+            repeat: -1,
+        })
+        this.body.anims.create({
+            key: 'dead_right',
+            frames: scene.anims.generateFrameNames('blinky', {
+                frames: 2,
+            }),
+            frameRate: 6,
+            repeat: -1,
+        })
+        this.body.anims.create({
+            key: 'dead_left',
+            frames: scene.anims.generateFrameNames('blinky', {
+                frames: 3,
+            }),
+            frameRate: 6,
+            repeat: -1,
+        })
+        this.body.anims.create({
+            key: 'dead_up',
+            frames: scene.anims.generateFrameNames('blinky', {
+                frames: 4,
+            }),
+            frameRate: 6,
+            repeat: -1,
+        })
+        this.body.anims.create({
+            key: 'dead_down',
+            frames: scene.anims.generateFrameNames('blinky', {
+                frames: 5,
+            }),
+            frameRate: 6,
+            repeat: -1,
+        })
         // this.faceRight()
     },
-    setTarget(pacman) {
+    setTarget(mazeLayer, pacman) {
         switch (this.getState()) {
             case this.stateEaten():
 
@@ -108,6 +148,25 @@ export default new Phaser.Class({
                 break;
             case this.directionRight():
                 this.getBody().play('pinky_right');
+                break;
+            case this.stateFrightened():
+                this.getBody().play('frightened');
+                break;
+            case this.stateEaten():
+                switch (this.getDirection()) {
+                    case this.directionUp():
+                        this.getBody().play('dead_up');
+                        break;
+                    case this.directionDown():
+                        this.getBody().play('dead_down');
+                        break;
+                    case this.directionLeft():
+                        this.getBody().play('dead_left');
+                        break;
+                    case this.directionRight():
+                        this.getBody().play('dead_right');
+                        break;
+                }
                 break;
         }
     },

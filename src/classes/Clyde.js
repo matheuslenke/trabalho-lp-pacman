@@ -47,7 +47,7 @@ export default new Phaser.Class({
             repeat: -1,
         })
     },
-    setTarget(pacman) {
+    setTarget(mazeLayer, pacman) {
         switch (this.getState()) {
             case this.stateEaten():
 

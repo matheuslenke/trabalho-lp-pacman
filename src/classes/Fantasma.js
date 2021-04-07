@@ -15,7 +15,7 @@ export default new Phaser.Class({
     initialize: function Fantasma(scene) {
         // classe base dos fantasmas
         this.state = CHASE;
-        this.direction = this.directionRight();
+        this.direction = this.directionUp();
         this.nextDirection = this.directionRight();
         // this.faceRight();
         this.body;
@@ -61,42 +61,49 @@ export default new Phaser.Class({
         }
         return true
     },
-    setTarget() {},
+    setTarget() {
+        return {
+            x: 0,
+            y: 0
+        }
+    },
     getTarget() {
         return this.target;
     },
 
     calculateRoute(mazeLayer) {
-        let [up_dist, left_dist, down_dist, right_dist] = [99999999, 99999999, 99999999, 99999999];
-        const { x, y } = this.getPosition();
-        if (!this.directionBlocked(mazeLayer, this.directionRight())) {
-            right_dist = this.linearDist({ x: x + 16, y: y }, this.getTarget());
-        }
-        if (!this.directionBlocked(mazeLayer, this.directionLeft())) {
-            left_dist = this.linearDist({ x: x - 16, y: y }, this.getTarget());
-        }
-        if (!this.directionBlocked(mazeLayer, this.directionUp())) {
-            up_dist = this.linearDist({ x: x, y: y - 16 }, this.getTarget());
-        }
-        if (!this.directionBlocked(mazeLayer, this.directionDown())) {
-            down_dist = this.linearDist({ x: x, y: y + 16 }, this.getTarget());
-        }
-        let menor_caminho = this.indexOfMin([up_dist, left_dist, down_dist, right_dist]);
-        switch (menor_caminho) {
-            case 0:
-                this.nextDirection = this.directionUp();
-                break;
-            case 1:
-                this.nextDirection = this.directionLeft();
-                break;
-            case 2:
-                this.nextDirection = this.directionDown();
-                break;
-            case 3:
-                this.nextDirection = this.directionRight();
-                break;
-            default:
-                return this.getDirection();
+        if (this.getState() !== this.stateFrightened()) {
+            let [up_dist, left_dist, down_dist, right_dist] = [99999999, 99999999, 99999999, 99999999];
+            const { x, y } = this.getPosition();
+            if (!this.directionBlocked(mazeLayer, this.directionRight())) {
+                right_dist = this.linearDist({ x: x + 16, y: y }, this.getTarget());
+            }
+            if (!this.directionBlocked(mazeLayer, this.directionLeft())) {
+                left_dist = this.linearDist({ x: x - 16, y: y }, this.getTarget());
+            }
+            if (!this.directionBlocked(mazeLayer, this.directionUp())) {
+                up_dist = this.linearDist({ x: x, y: y - 16 }, this.getTarget());
+            }
+            if (!this.directionBlocked(mazeLayer, this.directionDown())) {
+                down_dist = this.linearDist({ x: x, y: y + 16 }, this.getTarget());
+            }
+            let menor_caminho = this.indexOfMin([up_dist, left_dist, down_dist, right_dist]);
+            switch (menor_caminho) {
+                case 0:
+                    this.nextDirection = this.directionUp();
+                    break;
+                case 1:
+                    this.nextDirection = this.directionLeft();
+                    break;
+                case 2:
+                    this.nextDirection = this.directionDown();
+                    break;
+                case 3:
+                    this.nextDirection = this.directionRight();
+                    break;
+                default:
+                    return this.getDirection();
+            }
         }
     },
     linearDist(point1, point2) {
@@ -200,28 +207,80 @@ export default new Phaser.Class({
     faceLeft() {
         if (this.getDirection() != this.directionLeft()) {
             this.direction = this.directionLeft();
-            this.playAnimation(this.directionLeft());
+            switch (this.getState()) {
+                case this.stateEaten():
+                    this.playAnimation(this.stateEaten());
+                    break;
+                case this.stateChase():
+                    this.playAnimation(this.directionLeft());
+                    break;
+                case this.stateScatter():
+                    this.playAnimation(this.directionLeft());
+                    break;
+                case this.stateFrightened():
+                    this.playAnimation(this.stateFrightened());
+                    break;
+            }
         }
     },
 
     faceRight() {
         if (this.getDirection() != this.directionRight()) {
             this.direction = this.directionRight();
-            this.playAnimation(this.directionRight());
+            switch (this.getState()) {
+                case this.stateEaten():
+                    this.playAnimation(this.stateEaten());
+                    break;
+                case this.stateChase():
+                    this.playAnimation(this.directionRight());
+                    break;
+                case this.stateScatter():
+                    this.playAnimation(this.directionRight());
+                    break;
+                case this.stateFrightened():
+                    this.playAnimation(this.stateFrightened());
+                    break;
+            }
         }
     },
 
     faceUp() {
         if (this.getDirection() != this.directionUp()) {
             this.direction = this.directionUp();
-            this.playAnimation(this.directionUp());
+            switch (this.getState()) {
+                case this.stateEaten():
+                    this.playAnimation(this.stateEaten());
+                    break;
+                case this.stateChase():
+                    this.playAnimation(this.directionUp());
+                    break;
+                case this.stateScatter():
+                    this.playAnimation(this.directionUp());
+                    break;
+                case this.stateFrightened():
+                    this.playAnimation(this.stateFrightened());
+                    break;
+            }
         }
     },
 
     faceDown() {
         if (this.getDirection() != this.directionDown()) {
             this.direction = this.directionDown();
-            this.playAnimation(this.directionDown());
+            switch (this.getState()) {
+                case this.stateEaten():
+                    this.playAnimation(this.stateEaten());
+                    break;
+                case this.stateChase():
+                    this.playAnimation(this.directionDown());
+                    break;
+                case this.stateScatter():
+                    this.playAnimation(this.directionDown());
+                    break;
+                case this.stateFrightened():
+                    this.playAnimation(this.stateFrightened());
+                    break;
+            }
         }
     },
 
@@ -229,22 +288,35 @@ export default new Phaser.Class({
 
     getsEaten() {
         if (this.state !== EATEN) {
-            if (this.state === FRIGHTENED) {
-                this.state = EATEN
-            } else {
-                alert(`${this.name} was eaten when it was ${this.state}!`)
-            }
+            this.state = EATEN
         }
     },
 
     getsFrightened() {
         if (this.state !== FRIGHTENED) {
-            if (this.state === SCATTER || this.state === CHASE) {
-                this.state = FRIGHTENED
-            } else {
-                alert(`${this.name} got frightened when it was ${this.state}!`)
-            }
+            this.state = FRIGHTENED
+            this.turnAround();
         }
+    },
+    turnAround() {
+        switch (this.getDirection()) {
+            case this.directionUp():
+                this.faceDown();
+                break;
+            case this.directionDown():
+                this.faceUp();
+                break;
+            case this.directionLeft():
+                this.faceRight();
+                break;
+            case this.directionRight():
+                this.faceLeft();
+                break;
+        }
+    },
+
+    getRandomDirectionFromArray(directions) {
+        return Phaser.Math.RND.pick(directions);
     },
 
     startChasing() {

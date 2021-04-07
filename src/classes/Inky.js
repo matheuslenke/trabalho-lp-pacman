@@ -52,7 +52,7 @@ export default new Phaser.Class({
         })
         // this.faceRight()
     },
-    setTarget(pacman, blinky) {
+    setTarget(mazeLayer, pacman, blinky) {
         switch (this.getState()) {
             case this.stateEaten():
 
