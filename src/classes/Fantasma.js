@@ -14,89 +14,91 @@ const FRIGHTENED = 'frightened'
 export default new Phaser.Class({
     initialize: function Fantasma(scene) {
         // classe base dos fantasmas
-        this.state = CHASE
-        this.direction = RIGHT
+        this.state = CHASE;
+        this.direction = this.directionRight();
+        this.nextDirection = this.directionRight();
         // this.faceRight();
-        this.body
-        this.name = 'fantasma'
+        this.body;
+        this.target = { x: 0, y: 0 };
+        this.name = 'Fantasma'
     },
     getBody() {
         return this.body
     },
     update(mazeLayer, time, delta) {
         const { x, y } = this.body
-        if (this.direction === LEFT) {
+        if (this.nextDirection === LEFT) {
             const tile = mazeLayer.getTileAtWorldXY(x - 5, y - 4, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x - 5, y + 3, true)
             // console.log('Tile 1', tile, 'Tile2', tile2)
             if (!(tile.collides || tile2.collides)) {
-                this.body.x -= VELOCITY
+                this.faceLeft();
+                this.body.x -= VELOCITY;
             }
-        } else if (this.direction === RIGHT) {
+        } else if (this.nextDirection === RIGHT) {
             const tile = mazeLayer.getTileAtWorldXY(x + 4, y - 4, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x + 4, y + 3, true)
             if (!(tile.collides || tile2.collides)) {
-                this.body.x += VELOCITY
+                this.faceRight();
+                this.body.x += VELOCITY;
             }
-        } else if (this.direction === UP) {
+        } else if (this.nextDirection === UP) {
             const tile = mazeLayer.getTileAtWorldXY(x - 4, y - 5, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x + 3, y - 5, true)
             // console.log('Tile 1', tile, 'Tile2', tile2)
             if (!(tile.collides || tile2.collides)) {
-                this.body.y -= VELOCITY
+                this.faceUp();
+                this.body.y -= VELOCITY;
             }
-        } else if (this.direction === DOWN) {
+        } else if (this.nextDirection === DOWN) {
             const tile = mazeLayer.getTileAtWorldXY(x - 4, y + 4, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x + 3, y + 4, true)
             // console.log('Tile 1', tile, 'Tile2', tile2)
             if (!(tile.collides || tile2.collides)) {
-                this.body.y += VELOCITY
+                this.faceDown();
+                this.body.y += VELOCITY;
             }
         }
         return true
     },
+    setTarget(pacman_position) {},
+    getTarget() {
+        return this.target;
+    },
 
-    calculateRoute() {
+    calculateRoute(mazeLayer, pacman_position) {
+        this.setTarget(pacman_position);
         let [up_dist, left_dist, down_dist, right_dist] = [99999999, 99999999, 99999999, 99999999];
         const { x, y } = this.getPosition();
         if (!this.directionBlocked(mazeLayer, this.directionRight())) {
-            right_dist = this.linearDist({ x: x + 16, y: y }, getTarget());
+            right_dist = this.linearDist({ x: x + 16, y: y }, this.getTarget());
         }
         if (!this.directionBlocked(mazeLayer, this.directionLeft())) {
-            left_dist = this.linearDist({ x: x - 16, y: y }, getTarget());
+            left_dist = this.linearDist({ x: x - 16, y: y }, this.getTarget());
         }
         if (!this.directionBlocked(mazeLayer, this.directionUp())) {
-            up_dist = this.linearDist({ x: x, y: y - 16 }, getTarget());
+            up_dist = this.linearDist({ x: x, y: y - 16 }, this.getTarget());
         }
         if (!this.directionBlocked(mazeLayer, this.directionDown())) {
-            down_dist = this.linearDist({ x: x, y: y + 16 }, getTarget());
+            down_dist = this.linearDist({ x: x, y: y + 16 }, this.getTarget());
         }
         let menor_caminho = this.indexOfMin([up_dist, left_dist, down_dist, right_dist]);
         switch (menor_caminho) {
             case 0:
-                return UP;
+                this.nextDirection = this.directionUp();
                 break;
             case 1:
-                return LEFT;
+                this.nextDirection = this.directionLeft();
+                break;
             case 2:
-                return DOWN;
+                this.nextDirection = this.directionDown();
+                break;
             case 3:
-                return RIGHT;
+                this.nextDirection = this.directionRight();
+                break;
             default:
                 return this.getDirection();
         }
-    },
-    getTarget() {
-        // return {
-        //     x: ,
-        //     y:
-        // }
-    },
-    getDirection() {
-        return this.direction
-    },
-    getBody() {
-        return this.body
     },
     linearDist(point1, point2) {
         return Phaser.Math.Distance.BetweenPointsSquared({ x: point1.x, y: point1.y }, { x: point2.x, y: point2.y });
@@ -153,7 +155,6 @@ export default new Phaser.Class({
                 if (this.getDirection() == RIGHT) {
                     return true;
                 }
-                console.log(`${this.getDirection()}`);
                 tile = mazeLayer.getTileAtWorldXY(x - 5, y - 4, true)
                 tile2 = mazeLayer.getTileAtWorldXY(x - 5, y + 3, true)
                 break
@@ -173,24 +174,40 @@ export default new Phaser.Class({
         return { x: this.getBody().x, y: this.getBody().y }
     },
 
+    getDirection() {
+        return this.direction
+    },
+
+    getBody() {
+        return this.body
+    },
+
     faceLeft() {
-        this.direction = this.directionLeft();
-        this.playAnimation(this.directionLeft());
+        if (this.getDirection() != this.directionLeft()) {
+            this.direction = this.directionLeft();
+            this.playAnimation(this.directionLeft());
+        }
     },
 
     faceRight() {
-        this.direction = this.directionRight();
-        this.playAnimation(this.directionRight());
+        if (this.getDirection() != this.directionRight()) {
+            this.direction = this.directionRight();
+            this.playAnimation(this.directionRight());
+        }
     },
 
     faceUp() {
-        this.direction = this.directionUp();
-        this.playAnimation(this.directionUp());
+        if (this.getDirection() != this.directionUp()) {
+            this.direction = this.directionUp();
+            this.playAnimation(this.directionUp());
+        }
     },
 
     faceDown() {
-        this.direction = this.directionDown();
-        this.playAnimation(this.directionDown());
+        if (this.getDirection() != this.directionDown()) {
+            this.direction = this.directionDown();
+            this.playAnimation(this.directionDown());
+        }
     },
 
     playAnimation(animation) {},

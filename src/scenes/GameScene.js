@@ -119,15 +119,16 @@ export default class extends Phaser.Scene {
             checkHitFood()
             checkHitPowerup()
         }
-        if (!blinky.directionBlocked(mazeLayer, blinky.directionRight())) {
-            blinky.faceRight()
-        } else if (!blinky.directionBlocked(mazeLayer, blinky.directionLeft())) {
-            blinky.faceLeft()
-        } else if (!blinky.directionBlocked(mazeLayer, blinky.directionUp())) {
-            blinky.faceUp()
-        } else if (!blinky.directionBlocked(mazeLayer, blinky.directionDown())) {
-            blinky.faceDown()
-        }
+        //if (!blinky.directionBlocked(mazeLayer, blinky.directionRight()) && blinky.getDirection() !== blinky.directionRight()) {
+        //    blinky.faceRight()
+        //} else if (!blinky.directionBlocked(mazeLayer, blinky.directionLeft())) {
+        //    blinky.faceLeft()
+        //} else if (!blinky.directionBlocked(mazeLayer, blinky.directionUp())) {
+        //    blinky.faceUp()
+        //} else if (!blinky.directionBlocked(mazeLayer, blinky.directionDown())) {
+        //    blinky.faceDown()
+        //}
+        blinky.calculateRoute(mazeLayer, pacman.getPosition());
         blinky.update(mazeLayer, time, delta)
 
         // Atualiza movimento dos fantasmas

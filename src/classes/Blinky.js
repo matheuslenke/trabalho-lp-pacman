@@ -20,8 +20,8 @@ export default new Phaser.Class({
         this.name = 'Blinky'
         this.body = scene.physics.add.sprite(x, y, 'blinky').setScale(0.5)
         this.body.setDisplaySize(16, 16)
-        this.nextDirection = RIGHT
-        this.direction = RIGHT
+        // this.nextDirection = this.directionRight();
+        this.direction = this.directionRight();
 
         this.body.anims.create({
             key: 'blinky_right',
@@ -77,6 +77,9 @@ export default new Phaser.Class({
                 this.faceUp()
                 break
         }
+    },
+    setTarget(pacman_position) {
+        this.target = pacman_position;
     },
 
     playAnimation(animation) {
