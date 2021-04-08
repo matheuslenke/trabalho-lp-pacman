@@ -21,6 +21,7 @@ let mazeLayer
 let foodLayer
 let powerupsLayer
 let map
+let gfx
 let scoreText
 let blinky
 let pinky
@@ -72,6 +73,7 @@ export default class extends Phaser.Scene {
         // Inicialização do jogo
         this.startGame()
 
+
         // Controles
         this.cursors = this.input.keyboard.createCursorKeys()
         // Texto de score
@@ -105,16 +107,29 @@ export default class extends Phaser.Scene {
             checkHitFood()
             checkHitPowerup()
         }
-        if (blinky.canFaceRight(mazeLayer) === true) {
-            blinky.faceRight()
-        } else if (blinky.canFaceLeft(mazeLayer) === true) {
-            blinky.faceLeft()
-        } else if (blinky.canFaceUp(mazeLayer) === true) {
-            blinky.faceUp()
-        } else if (blinky.canFaceDown(mazeLayer) === true) {
-            blinky.faceDown()
-        }
+        blinky.setTarget(mazeLayer, pacman)
+        blinky.calculateRoute(mazeLayer)
         blinky.update(mazeLayer, time, delta)
+        pinky.setTarget(mazeLayer, pacman)
+        pinky.calculateRoute(mazeLayer)
+        pinky.update(mazeLayer, time, delta)
+        inky.setTarget(mazeLayer, pacman, blinky)
+        inky.calculateRoute(mazeLayer)
+        inky.update(mazeLayer, time, delta)
+        clyde.setTarget(mazeLayer, pacman)
+        clyde.calculateRoute(mazeLayer)
+        clyde.update(mazeLayer, time, delta)
+
+        // Desenha linha dos fantasmas até seus alvos
+        gfx.clear()
+            .lineStyle(1, 0xff3300)
+            .lineBetween(blinky.getPosition().x, blinky.getPosition().y, blinky.getTarget().x, blinky.getTarget().y)
+            .lineStyle(1, 0xeb88df)
+            .lineBetween(pinky.getPosition().x, pinky.getPosition().y, pinky.getTarget().x, pinky.getTarget().y)
+            .lineStyle(1, 0x88e8eb)
+            .lineBetween(inky.getPosition().x, inky.getPosition().y, inky.getTarget().x, inky.getTarget().y)
+            .lineStyle(1, 0xecbf65)
+            .lineBetween(clyde.getPosition().x, clyde.getPosition().y, clyde.getTarget().x, clyde.getTarget().y)
 
         // Atualiza movimento dos fantasmas
         if (time % 400 >= 0 && time % 400 <= 15) {
@@ -235,6 +250,7 @@ function hitFood(tile) {
     updateText()
     return false
 }
+
 function checkHitPowerup() {
     // Checa se está em cima de uma food
     const { x, y } = pacman.player

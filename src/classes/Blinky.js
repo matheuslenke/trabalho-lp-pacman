@@ -1,28 +1,19 @@
 import Phaser from 'phaser'
 import Fantasma from './Fantasma'
-
-//  Direction consts
-const UP = 0
-const DOWN = 1
-const LEFT = 2
-const RIGHT = 3
-const VELOCITY = 100
-const EATEN = 0
-const SCATTER = 1
-const CHASE = 2
-const FRIGHTENED = 3
+import Pacman from './Pacman'
 
 export default new Phaser.Class({
     Extends: Fantasma,
 
     initialize: function Blinky(scene, x, y) {
         // Fantasma Vermelho
-        this.name = 'fantasma'
+        this.name = 'Blinky'
         this.body = scene.physics.add.sprite(x, y, 'blinky').setScale(0.5)
         this.body.setDisplaySize(16, 16)
-        this.nextDirection = RIGHT
-        this.direction = RIGHT
-
+        this.startChasing();
+        //this.startScattering();
+        //this.getsFrightened();
+        //this.getsEaten();
         this.body.anims.create({
             key: 'blinky_right',
             frames: scene.anims.generateFrameNames('blinky', {
@@ -59,47 +50,115 @@ export default new Phaser.Class({
             frameRate: 6,
             repeat: -1,
         })
-        // this.faceRight()
+        this.body.anims.create({
+            key: 'frightened',
+            frames: scene.anims.generateFrameNames('blinky', {
+                start: 8,
+                end: 9,
+            }),
+            frameRate: 6,
+            repeat: -1,
+        })
+        this.body.anims.create({
+            key: 'dead_right',
+            frames: scene.anims.generateFrameNames('blinky', {
+                frames: [10],
+            }),
+            frameRate: 6,
+            repeat: -1,
+        })
+        this.body.anims.create({
+            key: 'dead_left',
+            frames: scene.anims.generateFrameNames('blinky', {
+                frames: [11],
+            }),
+            frameRate: 6,
+            repeat: -1,
+        })
+        this.body.anims.create({
+            key: 'dead_up',
+            frames: scene.anims.generateFrameNames('blinky', {
+                frames: [12],
+            }),
+            frameRate: 6,
+            repeat: -1,
+        })
+        this.body.anims.create({
+            key: 'dead_down',
+            frames: scene.anims.generateFrameNames('blinky', {
+                frames: [13],
+            }),
+            frameRate: 6,
+            repeat: -1,
+        })
     },
-
-    cycleDirection() {
-        switch (this.direction) {
-            case UP:
-                this.faceLeft()
-                break
-            case DOWN:
-                this.faceRight()
-                break
-            case LEFT:
-                this.faceDown()
-                break
-            case RIGHT:
-                this.faceUp()
-                break
+    setTarget(mazeLayer, pacman) {
+        switch (this.getState()) {
+            case this.stateEaten():
+                this.target = { x: 112, y: 124 };
+                break;
+            case this.stateScatter():
+                this.target = { x: 200, y: -8 };
+                break;
+            case this.stateChase():
+                this.target = pacman.getPosition();
+                break;
+            case this.stateFrightened():
+                this.target = { x: 112, y: 116 };
+                let directions_not_blocked = [];
+                if (!this.directionBlocked(mazeLayer, this.directionUp())) {
+                    directions_not_blocked.push(this.directionUp());
+                }
+                if (!this.directionBlocked(mazeLayer, this.directionLeft())) {
+                    directions_not_blocked.push(this.directionLeft());
+                }
+                if (!this.directionBlocked(mazeLayer, this.directionDown())) {
+                    directions_not_blocked.push(this.directionDown());
+                }
+                if (!this.directionBlocked(mazeLayer, this.directionRight())) {
+                    directions_not_blocked.push(this.directionRight());
+                }
+                this.nextDirection = this.getRandomDirectionFromArray(directions_not_blocked);
+                break;
+            default:
+                this.target = { x: 0, y: 0 };
         }
     },
 
-    getBody() {
-        return this.body
+    playAnimation(animation) {
+        switch (animation) {
+            case this.directionUp():
+                this.getBody().play('blinky_up');
+                break;
+            case this.directionDown():
+                this.getBody().play('blinky_down');
+                break;
+            case this.directionLeft():
+                this.getBody().play('blinky_left');
+                break;
+            case this.directionRight():
+                this.getBody().play('blinky_right');
+                break;
+            case this.stateFrightened():
+                this.getBody().play('frightened');
+                break;
+            case this.stateEaten():
+                switch (this.getDirection()) {
+                    case this.directionUp():
+                        this.getBody().play('dead_up');
+                        break;
+                    case this.directionDown():
+                        this.getBody().play('dead_down');
+                        break;
+                    case this.directionLeft():
+                        this.getBody().play('dead_left');
+                        break;
+                    case this.directionRight():
+                        this.getBody().play('dead_right');
+                        break;
+                }
+                break;
+        }
     },
 
-    faceLeft() {
-        this.direction = LEFT
-        this.body.play('blinky_left')
-    },
-
-    faceRight() {
-        this.direction = RIGHT
-        this.body.play('blinky_right')
-    },
-
-    faceUp() {
-        this.direction = UP
-        this.body.play('blinky_up')
-    },
-
-    faceDown() {
-        this.direction = DOWN
-        this.body.play('blinky_down')
-    },
 })
