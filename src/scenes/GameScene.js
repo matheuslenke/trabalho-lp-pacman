@@ -1,4 +1,4 @@
-import Phaser, { Physics } from 'phaser'
+import Phaser from 'phaser'
 
 import PacmanSprite from '../../assets/images/Sprite_Sheets/pacman.png'
 import BlinkySprite from '../../assets/images/Sprite_Sheets/blinky.png'
@@ -73,7 +73,6 @@ export default class extends Phaser.Scene {
         // Inicialização do jogo
         this.startGame()
 
-
         // Controles
         this.cursors = this.input.keyboard.createCursorKeys()
         // Texto de score
@@ -123,13 +122,33 @@ export default class extends Phaser.Scene {
         // Desenha linha dos fantasmas até seus alvos
         gfx.clear()
             .lineStyle(1, 0xff3300)
-            .lineBetween(blinky.getPosition().x, blinky.getPosition().y, blinky.getTarget().x, blinky.getTarget().y)
+            .lineBetween(
+                blinky.getPosition().x,
+                blinky.getPosition().y,
+                blinky.getTarget().x,
+                blinky.getTarget().y
+            )
             .lineStyle(1, 0xeb88df)
-            .lineBetween(pinky.getPosition().x, pinky.getPosition().y, pinky.getTarget().x, pinky.getTarget().y)
+            .lineBetween(
+                pinky.getPosition().x,
+                pinky.getPosition().y,
+                pinky.getTarget().x,
+                pinky.getTarget().y
+            )
             .lineStyle(1, 0x88e8eb)
-            .lineBetween(inky.getPosition().x, inky.getPosition().y, inky.getTarget().x, inky.getTarget().y)
+            .lineBetween(
+                inky.getPosition().x,
+                inky.getPosition().y,
+                inky.getTarget().x,
+                inky.getTarget().y
+            )
             .lineStyle(1, 0xecbf65)
-            .lineBetween(clyde.getPosition().x, clyde.getPosition().y, clyde.getTarget().x, clyde.getTarget().y)
+            .lineBetween(
+                clyde.getPosition().x,
+                clyde.getPosition().y,
+                clyde.getTarget().x,
+                clyde.getTarget().y
+            )
 
         // Atualiza movimento dos fantasmas
         if (time % 400 >= 0 && time % 400 <= 15) {
@@ -161,14 +180,17 @@ export default class extends Phaser.Scene {
         foodLayer = map.createLayer('Food', tileset, 0, 24)
         powerupsLayer = map.createLayer('Powerups', tileset, 0, 24)
 
+        // Gráficos das linhas para debug
+        gfx = this.add.graphics()
+
         // Criando o personagem
         pacman = new Pacman(this, 202, 140, walkMusic, 246)
 
-        // Controles do jogo
+        // Criando fantasmas
         blinky = new Blinky(this, 132, 36)
-        // pinky = new Pinky(this, 132, 64)
-        // inky = new Inky(this, 36, 256)
-        // clyde = new Clyde(this, 64, 230)
+        pinky = new Pinky(this, 132, 64)
+        inky = new Inky(this, 36, 256)
+        clyde = new Clyde(this, 52, 230)
 
         // Adicionando colisão do mapa com pacman
         mazeLayer.setCollisionByProperty({ collides: true })
