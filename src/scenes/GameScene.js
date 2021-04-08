@@ -79,6 +79,8 @@ export default class extends Phaser.Scene {
     }
 
     update(time, delta) {
+        // Faz ficar com 30 fps
+
         if (!pacman.alive) {
             return
         }
@@ -104,56 +106,54 @@ export default class extends Phaser.Scene {
             checkHitFood()
             checkHitPowerup()
         }
-        blinky.setTarget(mazeLayer, pacman)
-        blinky.calculateRoute(mazeLayer)
-        blinky.update(mazeLayer, time, delta)
-        pinky.setTarget(mazeLayer, pacman)
-        pinky.calculateRoute(mazeLayer)
-        pinky.update(mazeLayer, time, delta)
-        inky.setTarget(mazeLayer, pacman, blinky)
-        inky.calculateRoute(mazeLayer)
-        inky.update(mazeLayer, time, delta)
-        clyde.setTarget(mazeLayer, pacman)
-        clyde.calculateRoute(mazeLayer)
-        clyde.update(mazeLayer, time, delta)
+        if (time % 20 >= 0 && time % 20 <= 15) {
+            blinky.setTarget(mazeLayer, pacman)
+            blinky.calculateRoute(mazeLayer)
+            blinky.turnDirection(mazeLayer)
+            blinky.update(mazeLayer, time, delta)
+            pinky.setTarget(mazeLayer, pacman)
+            pinky.calculateRoute(mazeLayer)
+            pinky.turnDirection(mazeLayer)
+            pinky.update(mazeLayer, time, delta)
+            inky.setTarget(mazeLayer, pacman, blinky)
+            inky.calculateRoute(mazeLayer)
+            inky.turnDirection(mazeLayer)
+            inky.update(mazeLayer, time, delta)
+            clyde.setTarget(mazeLayer, pacman)
+            clyde.calculateRoute(mazeLayer)
+            clyde.turnDirection(mazeLayer)
+            clyde.update(mazeLayer, time, delta)
 
-        // Desenha linha dos fantasmas até seus alvos
-        gfx.clear()
-            .lineStyle(1, 0xff3300)
-            .lineBetween(
-                blinky.getPosition().x,
-                blinky.getPosition().y,
-                blinky.getTarget().x,
-                blinky.getTarget().y
-            )
-            .lineStyle(1, 0xeb88df)
-            .lineBetween(
-                pinky.getPosition().x,
-                pinky.getPosition().y,
-                pinky.getTarget().x,
-                pinky.getTarget().y
-            )
-            .lineStyle(1, 0x88e8eb)
-            .lineBetween(
-                inky.getPosition().x,
-                inky.getPosition().y,
-                inky.getTarget().x,
-                inky.getTarget().y
-            )
-            .lineStyle(1, 0xecbf65)
-            .lineBetween(
-                clyde.getPosition().x,
-                clyde.getPosition().y,
-                clyde.getTarget().x,
-                clyde.getTarget().y
-            )
-
-        // Atualiza movimento dos fantasmas
-        if (time % 400 >= 0 && time % 400 <= 15) {
-            // clyde.cycleDirection()
-            // pinky.cycleDirection()
-            // blinky.cycleDirection()
-            // inky.cycleDirection()
+            // Desenha linha dos fantasmas até seus alvos
+            gfx.clear()
+                .lineStyle(1, 0xff3300)
+                .lineBetween(
+                    blinky.getPosition().x,
+                    blinky.getPosition().y,
+                    blinky.getTarget().x,
+                    blinky.getTarget().y
+                )
+                .lineStyle(1, 0xeb88df)
+                .lineBetween(
+                    pinky.getPosition().x,
+                    pinky.getPosition().y,
+                    pinky.getTarget().x,
+                    pinky.getTarget().y
+                )
+                .lineStyle(1, 0x88e8eb)
+                .lineBetween(
+                    inky.getPosition().x,
+                    inky.getPosition().y,
+                    inky.getTarget().x,
+                    inky.getTarget().y
+                )
+                .lineStyle(1, 0xecbf65)
+                .lineBetween(
+                    clyde.getPosition().x,
+                    clyde.getPosition().y,
+                    clyde.getTarget().x,
+                    clyde.getTarget().y
+                )
         }
     }
 

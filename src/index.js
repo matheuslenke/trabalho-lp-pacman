@@ -42,8 +42,13 @@ const config = {
         arcade: {
             gravity: { y: 0 },
             debug: false,
-            fps: 30,
+            fps: 60,
         },
+    },
+    fps: {
+        target: 60,
+        min: 30,
+        forceSetTimeOut: true,
     },
     backgroundColor: '#000',
     parent: 'pacman',
