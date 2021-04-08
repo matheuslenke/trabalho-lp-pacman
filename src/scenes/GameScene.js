@@ -9,8 +9,6 @@ import ClydeSprite from '../../assets/images/Sprite_Sheets/clyde.png'
 import Map from '../../assets/images/Sprite_Sheets/MazeTilemap.png'
 
 import Pacman from '../classes/Pacman'
-import Food from '../classes/Food'
-import Fantasma from '../classes/Fantasma'
 import Blinky from '../classes/Blinky'
 import Pinky from '../classes/Pinky'
 import Inky from '../classes/Inky'
@@ -34,7 +32,7 @@ export default class extends Phaser.Scene {
         this.frameTime = 0
     }
 
-    init(data) {
+    init() {
         this.gameOver = false
     }
 
