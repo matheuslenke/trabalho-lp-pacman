@@ -9,17 +9,29 @@ const NONE = 4
 const VELOCITY = 1
 
 export default new Phaser.Class({
-    initialize: function Pacman(scene, x, y) {
+    initialize: function Pacman(scene, x, y, walkMusic, totalFood) {
         this.alive = true
         this.score = 0
-        this.lifes = 3
-        this.powerup = 0
+        this.lives = 3
+        this.powerup = false
         this.nextDirection = RIGHT
         this.direction = RIGHT
+        this.walkMusic = walkMusic
+        this.playingWalkMusic = false
+        this.foodEaten = 0
+        this.totalFood = totalFood
+        // Adicionando imagem das vidas
+        const life1 = scene.physics.add.image(216, 280, 'pacman')
+        const life2 = scene.physics.add.image(200, 280, 'pacman')
+        const life3 = scene.physics.add.image(184, 280, 'pacman')
+        this.lifeImages = []
+        this.lifeImages.push(life3, life2, life1)
 
+        // Criando sprite do player
         this.player = scene.physics.add.sprite(x, y, 'pacman').setScale(0.5)
         this.player.setDisplaySize(16, 16)
 
+        // Criando animações do Pacman
         this.player.anims.create({
             key: 'pacmanDown',
             frames: scene.anims.generateFrameNames('pacman', {
@@ -63,9 +75,23 @@ export default new Phaser.Class({
             frameRate: 12,
             repeat: 0,
         })
-        // this.player.setCollideWorldBounds(true)
+        this.player.anims.create({
+            key: 'pacmanLives',
+            frames: scene.anims.generateFrameNames('pacman', {
+                frames: [0],
+            }),
+            frameRate: 1,
+            repeat: -1,
+        })
         this.player.play('pacmanRight')
-        // this.faceRight()
+    },
+
+    startPosition(x, y) {
+        this.player.x = x
+        this.player.y = y
+        this.player.play('pacmanRight')
+        this.direction = RIGHT
+        this.nextDirection = RIGHT
     },
 
     getPlayer() {
@@ -113,15 +139,19 @@ export default new Phaser.Class({
         if (this.direction === LEFT) {
             const tile = mazeLayer.getTileAtWorldXY(x - 5, y - 4, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x - 5, y + 3, true)
-            // console.log('Tile 1', tile, 'Tile2', tile2)
-            if (!(tile.collides || tile2.collides)) {
+            if (!tile && !tile2) {
+                this.player.x -= VELOCITY
+                setTimeout(this.teleportToRight.bind(this), 120)
+            } else if (!(tile.collides || tile2.collides)) {
                 this.player.x -= VELOCITY
             }
         } else if (this.direction === RIGHT) {
             const tile = mazeLayer.getTileAtWorldXY(x + 4, y - 4, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x + 4, y + 3, true)
-            // console.log('Tile 1', tile, 'Tile2', tile2)
-            if (!(tile.collides || tile2.collides)) {
+            if (!tile && !tile2) {
+                this.player.x += VELOCITY
+                setTimeout(this.teleportToLeft.bind(this), 120)
+            } else if (!(tile.collides || tile2.collides)) {
                 this.player.x += VELOCITY
             }
         } else if (this.direction === UP) {
@@ -141,6 +171,12 @@ export default new Phaser.Class({
         }
         return true
     },
+    teleportToLeft() {
+        this.player.x = -4
+    },
+    teleportToRight() {
+        this.player.x = 228
+    },
 
     turnDirection(mazeLayer) {
         const { x, y } = this.player
@@ -151,7 +187,7 @@ export default new Phaser.Class({
             const tile = mazeLayer.getTileAtWorldXY(x - 5, y - 4, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x - 5, y + 3, true)
             // console.log('Tile 1', tile, 'Tile2', tile2)
-            if (tile.collides || tile2.collides) {
+            if (!tile || !tile2 || tile.collides || tile2.collides) {
                 // console.log('Blocked left')
             } else {
                 this.faceLeft()
@@ -160,7 +196,7 @@ export default new Phaser.Class({
             const tile = mazeLayer.getTileAtWorldXY(x + 4, y - 4, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x + 4, y + 3, true)
             // console.log('Tile 1', tile, 'Tile2', tile2)
-            if (tile.collides || tile2.collides) {
+            if (!tile || !tile2 || tile.collides || tile2.collides) {
                 // console.log('Blocked right')
             } else {
                 this.faceRight()
@@ -169,7 +205,7 @@ export default new Phaser.Class({
             const tile = mazeLayer.getTileAtWorldXY(x - 4, y - 5, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x + 3, y - 5, true)
             // console.log('Tile 1', tile, 'Tile2', tile2)
-            if (tile.collides || tile2.collides) {
+            if (!tile || !tile2 || tile.collides || tile2.collides) {
                 // console.log('Blocked up')
             } else {
                 this.faceUp()
@@ -178,7 +214,7 @@ export default new Phaser.Class({
             const tile = mazeLayer.getTileAtWorldXY(x - 4, y + 4, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x + 3, y + 4, true)
             // console.log('Tile 1', tile, 'Tile2', tile2)
-            if (tile.collides || tile2.collides) {
+            if (!tile || !tile2 || tile.collides || tile2.collides) {
                 // console.log('Blocked down')
             } else {
                 this.faceDown()
@@ -209,10 +245,56 @@ export default new Phaser.Class({
     getScore() {
         return this.score
     },
+    hitGhost() {
+        console.log('Hit')
+        if (this.powerup === false) {
+            // Remove imagem das vidas embaixo
+            const lifeImage = this.lifeImages.pop()
+            lifeImage.destroy()
+            // Mata o pacman
+            this.alive = false
+            this.player.play('pacmanDie')
+            this.lives -= 1
+            if (this.lives === 0) {
+                // Game Over
+                return true
+            }
+        } else {
+            // Mata o fantasma
+            console.log('Mata fantasma')
+        }
+        return false
+    },
     hitFood() {
         this.score += 100
+        this.foodEaten += 1
+        if (this.playingWalkMusic === false) {
+            this.walkMusic.play({
+                duration: 0.5506875,
+                rate: 1,
+                delay: 0,
+            })
+            this.playingWalkMusic = true
+            this.walkMusic.once(
+                Phaser.Sound.Events.COMPLETE,
+                () => {
+                    this.playingWalkMusic = false
+                },
+                this
+            )
+        }
     },
     hitPowerup() {
         this.score += 1000
+        this.powerup = true
+        setTimeout(this.clearPowerup.bind(this), 6000)
+    },
+    clearPowerup() {
+        this.powerup = false
+        console.log('Powerup acabou')
+    },
+    hasWin() {
+        if (this.foodEaten >= this.totalFood) return true
+        return false
     },
 })

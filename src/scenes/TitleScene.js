@@ -22,16 +22,29 @@ export default class TitleScene extends Phaser.Scene {
             loop: -1,
         })
 
-        this.add.text(100, 100, 'Pacman game', {
-            font: '64px Bangers',
+        this.add.text(35, 100, 'Pacman', {
+            font: '25px Emulogic',
             fill: '#7744ff',
         })
+
+        this.add.text(30, 150, 'Press enter to start', {
+            font: '8px Emulogic',
+            fill: '#7744ff',
+        })
+
+        this.input.keyboard.once(
+            'keyup-ENTER',
+            function () {
+                this.scene.start('GameScene')
+            },
+            this
+        )
     }
 
     update() {
         // setTimeout(() => {
         //   this.scene.start('GameScene')
         // },3000)
-        this.scene.start('GameScene')
+        // this.scene.start('GameScene')
     }
 }

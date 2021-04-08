@@ -4,6 +4,8 @@ import Phaser from 'phaser'
 import BootScene from './scenes/BootScene'
 import TitleScene from './scenes/TitleScene'
 import GameScene from './scenes/GameScene'
+import GameOverScene from './scenes/GameOverScene'
+import WinScene from './scenes/WinScene'
 
 // const gameSettings = {
 //     playerSpeed: 100,
@@ -40,12 +42,12 @@ const config = {
         arcade: {
             gravity: { y: 0 },
             debug: false,
+            fps: 30,
         },
     },
-    framesPerSecond: 30,
     backgroundColor: '#000',
     parent: 'pacman',
-    scene: [BootScene, TitleScene, GameScene],
+    scene: [BootScene, TitleScene, GameScene, GameOverScene, WinScene],
 }
 
 // eslint-disable-next-line no-unused-vars

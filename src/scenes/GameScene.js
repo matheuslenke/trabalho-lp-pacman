@@ -1,12 +1,11 @@
-import Phaser from 'phaser'
+import Phaser, { Physics } from 'phaser'
 
-import FoodImg from '../../assets/images/other/apple.png'
 import PacmanSprite from '../../assets/images/Sprite_Sheets/pacman.png'
 import BlinkySprite from '../../assets/images/Sprite_Sheets/blinky.png'
 import PinkySprite from '../../assets/images/Sprite_Sheets/pinky.png'
 import InkySprite from '../../assets/images/Sprite_Sheets/inky.png'
 import ClydeSprite from '../../assets/images/Sprite_Sheets/clyde.png'
-
+// import GameStartAudio from '../../assets/audio/opening.mp3'
 import Map from '../../assets/images/Sprite_Sheets/MazeTilemap.png'
 
 import Pacman from '../classes/Pacman'
@@ -35,8 +34,11 @@ export default class extends Phaser.Scene {
         this.frameTime = 0
     }
 
+    init(data) {
+        this.gameOver = false
+    }
+
     preload() {
-        this.load.image('food', FoodImg)
         this.load.spritesheet('pacman', PacmanSprite, {
             frameWidth: 16,
             frameHeight: 16,
@@ -60,37 +62,17 @@ export default class extends Phaser.Scene {
             frameHeight: 16,
         })
         this.load.image('map', Map)
+
+        // Audios
+        this.load.audio('opening', '../../assets/audio/opening.mp3')
+        this.load.audio('pacmanDie', '../../assets/audio/pacmanDie.mp3')
+        this.load.audio('pacmanWalk', '../../assets/audio/wakawaka.mp3')
     }
 
     create() {
-        // Criação do labirinto
-        map = this.make.tilemap({ key: 'map' })
-        const tileset = map.addTilesetImage('MazeTilemap', 'tiles')
+        // Inicialização do jogo
+        this.startGame()
 
-        mazeLayer = map.createLayer('Borders', tileset, 0, 24)
-        foodLayer = map.createLayer('Food', tileset, 0, 24)
-        powerupsLayer = map.createLayer('Powerups', tileset, 0, 24)
-
-        gfx = this.add.graphics()
-
-        // Criando o personagem
-        pacman = new Pacman(this, 28, 36)
-
-        // Controles do jogo
-        blinky = new Blinky(this, 132, 36)
-        pinky = new Pinky(this, 132, 64)
-        inky = new Inky(this, 36, 256)
-        clyde = new Clyde(this, 52, 230)
-
-        // Adicionando colisão do mapa com pacman
-        mazeLayer.setCollisionByProperty({ collides: true })
-        this.physics.add.collider(pacman.getPlayer(), mazeLayer)
-
-        // Adicionando colisão com os fantasmas
-        this.physics.add.collider(blinky.getBody(), mazeLayer)
-        this.physics.add.collider(pinky.getBody(), mazeLayer)
-        this.physics.add.collider(inky.getBody(), mazeLayer)
-        this.physics.add.collider(clyde.getBody(), mazeLayer)
 
         // Controles
         this.cursors = this.input.keyboard.createCursorKeys()
@@ -102,6 +84,9 @@ export default class extends Phaser.Scene {
     update(time, delta) {
         if (!pacman.alive) {
             return
+        }
+        if (pacman.hasWin() === true) {
+            this.scene.start('WinScene')
         }
         this.frameTime += delta
         // Checa se não está numa posição quebrada
@@ -153,6 +138,99 @@ export default class extends Phaser.Scene {
             // blinky.cycleDirection()
             // inky.cycleDirection()
         }
+    }
+
+    startGame() {
+        // Tocar a música de intro
+        // this.scene.pause()
+        // const openingMusic = this.sound.add('opening')
+        // openingMusic.play()
+        // openingMusic.once(
+        //     Phaser.Sound.Events.COMPLETE,
+        //     () => {
+        //         this.scene.resume()
+        //     },
+        //     this
+        // )
+        const walkMusic = this.sound.add('pacmanWalk')
+        // Criação do labirinto
+        map = this.make.tilemap({ key: 'map' })
+        const tileset = map.addTilesetImage('MazeTilemap', 'tiles')
+
+        mazeLayer = map.createLayer('Borders', tileset, 0, 24)
+        foodLayer = map.createLayer('Food', tileset, 0, 24)
+        powerupsLayer = map.createLayer('Powerups', tileset, 0, 24)
+
+        // Criando o personagem
+        pacman = new Pacman(this, 202, 140, walkMusic, 246)
+
+        // Controles do jogo
+        blinky = new Blinky(this, 132, 36)
+        // pinky = new Pinky(this, 132, 64)
+        // inky = new Inky(this, 36, 256)
+        // clyde = new Clyde(this, 64, 230)
+
+        // Adicionando colisão do mapa com pacman
+        mazeLayer.setCollisionByProperty({ collides: true })
+        this.physics.add.collider(pacman.getPlayer(), mazeLayer)
+
+        // Adicionando colisão com os fantasmas
+        this.physics.add.collider(blinky.getBody(), mazeLayer)
+        this.physics.add.collider(
+            blinky.getBody(),
+            pacman.getPlayer(),
+            this.hitGhost,
+            null,
+            this
+        )
+    }
+
+    restartGame() {
+        this.scene.pause()
+        const openingMusic = this.sound.add('opening')
+        openingMusic.play()
+        openingMusic.once(
+            Phaser.Sound.Events.COMPLETE,
+            () => {
+                this.scene.resume()
+            },
+            this
+        )
+        pacman.startPosition(28, 36)
+        this.physics.resume()
+    }
+
+    resumeScene() {
+        this.scene.resume()
+    }
+
+    hitGhost(ghost, pacmanSprite) {
+        if (pacman.alive && !pacman.powerup) {
+            this.physics.pause()
+            const dieSound = this.sound.add('pacmanDie')
+            dieSound.play()
+            dieSound.once(
+                Phaser.Sound.Events.COMPLETE,
+                () => {
+                    if (!this.gameOver) {
+                        pacman.alive = true
+                        this.restartGame()
+                    } else {
+                        this.runGameOver()
+                    }
+                },
+                this
+            )
+            const gameOver = pacman.hitGhost(this)
+            if (gameOver) {
+                this.gameOver = true
+            }
+        }
+    }
+
+    runGameOver() {
+        this.scene.pause()
+        this.scene.start('GameOverScene')
     }
 }
 
