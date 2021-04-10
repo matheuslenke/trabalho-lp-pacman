@@ -79,8 +79,7 @@ export default class extends Phaser.Scene {
     }
 
     update(time, delta) {
-        // Faz ficar com 30 fps
-
+        // console.log(pacman.player.x, pacman.player.y)
         if (!pacman.alive) {
             return
         }
@@ -105,56 +104,97 @@ export default class extends Phaser.Scene {
         if (pacman.update(mazeLayer, time, delta)) {
             checkHitFood()
             checkHitPowerup()
+            // console.log(pacman.player.x, pacman.player.y)
         }
         if (time % 20 >= 0 && time % 20 <= 15) {
-            blinky.setTarget(mazeLayer, pacman)
-            blinky.calculateRoute(mazeLayer)
-            blinky.turnDirection(mazeLayer)
+            // Lógica do Blinky
+            // Se estiver dentro da casinha do labirinto
+            if (blinky.getState() === blinky.stateLeavingHouse()) {
+                blinky.leaveStartArea(mazeLayer)
+            } else {
+                // Se tiver saído da casinha do labirinto
+                blinky.setTarget(mazeLayer, pacman)
+                blinky.calculateRoute(mazeLayer)
+                blinky.turnDirection(mazeLayer)
+            }
             blinky.update(mazeLayer, time, delta)
-            pinky.setTarget(mazeLayer, pacman)
-            pinky.calculateRoute(mazeLayer)
-            pinky.turnDirection(mazeLayer)
-            pinky.update(mazeLayer, time, delta)
-            inky.setTarget(mazeLayer, pacman, blinky)
-            inky.calculateRoute(mazeLayer)
-            inky.turnDirection(mazeLayer)
-            inky.update(mazeLayer, time, delta)
-            clyde.setTarget(mazeLayer, pacman)
-            clyde.calculateRoute(mazeLayer)
-            clyde.turnDirection(mazeLayer)
+            // Lógica do Clyde
+            // Se estiver dentro da casinha do labirinto
+            if (clyde.getState() === clyde.stateLeavingHouse()) {
+                clyde.leaveStartArea(mazeLayer)
+            } else {
+                // Se tiver saído da casinha do labirinto
+                clyde.setTarget(mazeLayer, pacman)
+                clyde.calculateRoute(mazeLayer)
+                clyde.turnDirection(mazeLayer)
+            }
             clyde.update(mazeLayer, time, delta)
-
-            // Desenha linha dos fantasmas até seus alvos
-            gfx.clear()
-                .lineStyle(1, 0xff3300)
-                .lineBetween(
-                    blinky.getPosition().x,
-                    blinky.getPosition().y,
-                    blinky.getTarget().x,
-                    blinky.getTarget().y
-                )
-                .lineStyle(1, 0xeb88df)
-                .lineBetween(
-                    pinky.getPosition().x,
-                    pinky.getPosition().y,
-                    pinky.getTarget().x,
-                    pinky.getTarget().y
-                )
-                .lineStyle(1, 0x88e8eb)
-                .lineBetween(
-                    inky.getPosition().x,
-                    inky.getPosition().y,
-                    inky.getTarget().x,
-                    inky.getTarget().y
-                )
-                .lineStyle(1, 0xecbf65)
-                .lineBetween(
-                    clyde.getPosition().x,
-                    clyde.getPosition().y,
-                    clyde.getTarget().x,
-                    clyde.getTarget().y
-                )
+            // Lógica do Inky
+            // Se estiver dentro da casinha do labirinto
+            if (inky.getState() === inky.stateLeavingHouse()) {
+                inky.leaveStartArea(mazeLayer)
+            } else {
+                // Se tiver saído da casinha do labirinto
+                inky.setTarget(mazeLayer, pacman)
+                inky.calculateRoute(mazeLayer)
+                inky.turnDirection(mazeLayer)
+            }
+            inky.update(mazeLayer, time, delta)
+            // Lógica do Pinky
+            // Se estiver dentro da casinha do labirinto
+            if (pinky.getState() === pinky.stateLeavingHouse()) {
+                pinky.leaveStartArea(mazeLayer)
+            } else {
+                // Se tiver saído da casinha do labirinto
+                pinky.setTarget(mazeLayer, pacman)
+                pinky.calculateRoute(mazeLayer)
+                pinky.turnDirection(mazeLayer)
+            }
+            pinky.update(mazeLayer, time, delta)
         }
+        // pinky.setTarget(mazeLayer, pacman)
+        // pinky.calculateRoute(mazeLayer)
+        // pinky.turnDirection(mazeLayer)
+        // pinky.update(mazeLayer, time, delta)
+        // inky.setTarget(mazeLayer, pacman, blinky)
+        // inky.calculateRoute(mazeLayer)
+        // inky.turnDirection(mazeLayer)
+        // inky.update(mazeLayer, time, delta)
+        // clyde.setTarget(mazeLayer, pacman)
+        // clyde.calculateRoute(mazeLayer)
+        // clyde.turnDirection(mazeLayer)
+        // clyde.update(mazeLayer, time, delta)
+
+        // Desenha linha dos fantasmas até seus alvos
+        gfx.clear()
+            .lineStyle(1, 0xff3300)
+            .lineBetween(
+                blinky.getPosition().x,
+                blinky.getPosition().y,
+                blinky.getTarget().x,
+                blinky.getTarget().y
+            )
+            .lineStyle(1, 0xeb88df)
+            // .lineBetween(
+            //     pinky.getPosition().x,
+            //     pinky.getPosition().y,
+            //     pinky.getTarget().x,
+            //     pinky.getTarget().y
+            // )
+            .lineStyle(1, 0x88e8eb)
+            .lineBetween(
+                inky.getPosition().x,
+                inky.getPosition().y,
+                inky.getTarget().x,
+                inky.getTarget().y
+            )
+            .lineStyle(1, 0xecbf65)
+            .lineBetween(
+                clyde.getPosition().x,
+                clyde.getPosition().y,
+                clyde.getTarget().x,
+                clyde.getTarget().y
+            )
     }
 
     startGame() {
@@ -185,13 +225,14 @@ export default class extends Phaser.Scene {
         pacman = new Pacman(this, 202, 140, walkMusic, 246)
 
         // Criando fantasmas
-        blinky = new Blinky(this, 132, 36)
-        pinky = new Pinky(this, 132, 64)
-        inky = new Inky(this, 36, 256)
-        clyde = new Clyde(this, 52, 230)
+        blinky = new Blinky(this, 114, 140)
+        pinky = new Pinky(this, 125, 140)
+        inky = new Inky(this, 130, 140)
+        clyde = new Clyde(this, 90, 140)
 
         // Adicionando colisão do mapa com pacman
         mazeLayer.setCollisionByProperty({ collides: true })
+        mazeLayer.setCollisionByProperty({ ghostCollides: true })
         this.physics.add.collider(pacman.getPlayer(), mazeLayer)
 
         // Adicionando colisão com os fantasmas

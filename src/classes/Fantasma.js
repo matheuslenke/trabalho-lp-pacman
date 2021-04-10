@@ -10,23 +10,28 @@ const EATEN = 'eaten'
 const SCATTER = 'scatter'
 const CHASE = 'chase'
 const FRIGHTENED = 'frightened'
+const LEAVINGHOUSE = 'LEAVINGHOUSE'
 
 export default new Phaser.Class({
     initialize: function Fantasma(scene) {
         // classe base dos fantasmas
-        this.state = CHASE
+        this.state = LEAVINGHOUSE
         this.direction = this.directionUp()
         this.nextDirection = this.directionRight()
         // this.faceRight();
         this.body
+        this.bouncingTimes = 0
         this.target = { x: 0, y: 0 }
         this.name = 'Fantasma'
+        this.canPassDoor = true
+        this.timeLEAVINGHOUSE = 0
     },
     getBody() {
         return this.body
     },
     update(mazeLayer, time, delta) {
         const { x, y } = this.body
+        this.timeCounter += 1
         if (this.direction === LEFT) {
             const tile = mazeLayer.getTileAtWorldXY(x - 5, y - 4, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x - 5, y + 3, true)
@@ -50,7 +55,9 @@ export default new Phaser.Class({
             const tile2 = mazeLayer.getTileAtWorldXY(x + 3, y - 5, true)
             // console.log('Tile 1', tile, 'Tile2', tile2)
             if (!tile || !tile2) return true
-
+            if (this.state === this.stateLeavingHouse()) {
+                this.body.y -= VELOCITY
+            }
             if (!(tile.collides || tile2.collides)) {
                 this.body.y -= VELOCITY
             }
@@ -98,7 +105,6 @@ export default new Phaser.Class({
         } else if (this.nextDirection === RIGHT && this.direction !== RIGHT) {
             const tile = mazeLayer.getTileAtWorldXY(x + 4, y - 4, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x + 4, y + 3, true)
-            // console.log('Tile 1', tile, 'Tile2', tile2)
             if (!tile || !tile2 || tile.collides || tile2.collides) {
                 // console.log('Blocked right')
             } else {
@@ -217,6 +223,9 @@ export default new Phaser.Class({
     stateFrightened() {
         return FRIGHTENED
     },
+    stateLeavingHouse() {
+        return LEAVINGHOUSE
+    },
     directionBlocked(mazeLayer, direction) {
         const { x, y } = this.getBody()
         let tile
@@ -262,10 +271,6 @@ export default new Phaser.Class({
 
     getDirection() {
         return this.direction
-    },
-
-    getBody() {
-        return this.body
     },
 
     getState() {
@@ -397,5 +402,15 @@ export default new Phaser.Class({
         if (this.state !== SCATTER) {
             this.state = SCATTER
         }
+    },
+    startLeaveStartArea(bouncingTimes) {
+        if (this.state !== LEAVINGHOUSE) {
+            this.state = LEAVINGHOUSE
+            this.bouncingTimes = 0
+            this.maxBouncingTimes = bouncingTimes
+        }
+    },
+    leaveStartArea(mazeLayer) {
+        // console.log(this.timeCounter)
     },
 })

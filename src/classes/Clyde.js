@@ -9,7 +9,12 @@ export default new Phaser.Class({
         this.name = 'Clyde'
         this.body = scene.physics.add.sprite(x, y, 'clyde').setScale(0.5)
         this.body.setDisplaySize(16, 16)
-        this.startChasing();
+        this.body.x = x
+        this.body.y = y
+        // this.startChasing();
+        this.target = { x: 0, y: 0 }
+        this.direction = this.directionRight()
+        this.startLeaveStartArea(3)
         this.body.anims.create({
             key: 'clyde_right',
             frames: scene.anims.generateFrameNames('clyde', {
@@ -50,41 +55,69 @@ export default new Phaser.Class({
     setTarget(mazeLayer, pacman) {
         switch (this.getState()) {
             case this.stateEaten():
-
-                break;
+                break
             case this.stateScatter():
-                this.target = { x: 4, y: 276 };
-                break;
+                this.target = { x: 4, y: 276 }
+                break
             case this.stateChase():
-                if (this.linearDist(this.getPosition(), pacman.getPosition()) >= (64 * 64)) {
-                    this.target = pacman.getPosition();
+                if (
+                    this.linearDist(this.getPosition(), pacman.getPosition()) >=
+                    64 * 64
+                ) {
+                    this.target = pacman.getPosition()
                 } else {
-                    this.target = { x: 4, y: 276 };
+                    this.target = { x: 4, y: 276 }
                 }
-                break;
+                break
             case this.stateFrightened():
-
-                break;
+                break
             default:
-                this.target = { x: 4, y: 276 };
+                this.target = { x: 4, y: 276 }
         }
     },
 
     playAnimation(animation) {
         switch (animation) {
             case this.directionUp():
-                this.getBody().play('clyde_up');
-                break;
+                this.getBody().play('clyde_up')
+                break
             case this.directionDown():
-                this.getBody().play('clyde_down');
-                break;
+                this.getBody().play('clyde_down')
+                break
             case this.directionLeft():
-                this.getBody().play('clyde_left');
-                break;
+                this.getBody().play('clyde_left')
+                break
             case this.directionRight():
-                this.getBody().play('clyde_right');
-                break;
+                this.getBody().play('clyde_right')
+                break
         }
     },
-
+    leaveStartArea(mazeLayer) {
+        // console.log(this.timeCounter)
+        const { x, y } = this.getPosition()
+        if (this.bouncingTimes === this.maxBouncingTimes) {
+            // console.log('Acabou')
+            if (x === 113) {
+                this.faceUp()
+            }
+            if (y === 116) {
+                this.faceLeft()
+                this.startChasing()
+            }
+        } else if (this.getDirection() === this.directionRight()) {
+            const tile = mazeLayer.getTileAtWorldXY(x + 4, y - 4, true)
+            const tile2 = mazeLayer.getTileAtWorldXY(x + 4, y + 3, true)
+            if (tile.collides || tile2.collides) {
+                this.faceLeft()
+                this.bouncingTimes += 1
+            }
+        } else if (this.getDirection() === this.directionLeft()) {
+            const tile = mazeLayer.getTileAtWorldXY(x - 5, y - 4, true)
+            const tile2 = mazeLayer.getTileAtWorldXY(x - 5, y + 3, true)
+            if (tile.collides || tile2.collides) {
+                this.faceRight()
+                this.bouncingTimes += 1
+            }
+        }
+    },
 })

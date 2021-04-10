@@ -10,8 +10,12 @@ export default new Phaser.Class({
         this.name = 'Blinky'
         this.body = scene.physics.add.sprite(x, y, 'blinky').setScale(0.5)
         this.body.setDisplaySize(16, 16)
-        this.startChasing();
-        //this.startScattering();
+        this.body.x = x
+        this.body.y = y
+        this.target = { x: 0, y: 0 }
+        this.direction = this.directionRight()
+        // this.startChasing();
+        this.startLeaveStartArea(6)
         //this.getsFrightened();
         //this.getsEaten();
         this.body.anims.create({
@@ -94,71 +98,103 @@ export default new Phaser.Class({
     },
     setTarget(mazeLayer, pacman) {
         switch (this.getState()) {
+            case this.stateLeavingHouse():
+                this.target = { x: 116, y: 116 }
+                break
             case this.stateEaten():
-                this.target = { x: 112, y: 124 };
-                break;
+                this.target = { x: 112, y: 124 }
+                break
             case this.stateScatter():
-                this.target = { x: 200, y: -8 };
-                break;
+                this.target = { x: 200, y: -8 }
+                break
             case this.stateChase():
-                this.target = pacman.getPosition();
-                break;
+                this.target = pacman.getPosition()
+                break
             case this.stateFrightened():
-                this.target = { x: 112, y: 116 };
-                let directions_not_blocked = [];
+                this.target = { x: 112, y: 116 }
+                let directions_not_blocked = []
                 if (!this.directionBlocked(mazeLayer, this.directionUp())) {
-                    directions_not_blocked.push(this.directionUp());
+                    directions_not_blocked.push(this.directionUp())
                 }
                 if (!this.directionBlocked(mazeLayer, this.directionLeft())) {
-                    directions_not_blocked.push(this.directionLeft());
+                    directions_not_blocked.push(this.directionLeft())
                 }
                 if (!this.directionBlocked(mazeLayer, this.directionDown())) {
-                    directions_not_blocked.push(this.directionDown());
+                    directions_not_blocked.push(this.directionDown())
                 }
                 if (!this.directionBlocked(mazeLayer, this.directionRight())) {
-                    directions_not_blocked.push(this.directionRight());
+                    directions_not_blocked.push(this.directionRight())
                 }
-                this.nextDirection = this.getRandomDirectionFromArray(directions_not_blocked);
-                break;
+                this.nextDirection = this.getRandomDirectionFromArray(
+                    directions_not_blocked
+                )
+                break
             default:
-                this.target = { x: 0, y: 0 };
+                this.target = { x: 0, y: 0 }
         }
     },
 
     playAnimation(animation) {
         switch (animation) {
             case this.directionUp():
-                this.getBody().play('blinky_up');
-                break;
+                this.getBody().play('blinky_up')
+                break
             case this.directionDown():
-                this.getBody().play('blinky_down');
-                break;
+                this.getBody().play('blinky_down')
+                break
             case this.directionLeft():
-                this.getBody().play('blinky_left');
-                break;
+                this.getBody().play('blinky_left')
+                break
             case this.directionRight():
-                this.getBody().play('blinky_right');
-                break;
+                this.getBody().play('blinky_right')
+                break
             case this.stateFrightened():
-                this.getBody().play('frightened');
-                break;
+                this.getBody().play('frightened')
+                break
             case this.stateEaten():
                 switch (this.getDirection()) {
                     case this.directionUp():
-                        this.getBody().play('dead_up');
-                        break;
+                        this.getBody().play('dead_up')
+                        break
                     case this.directionDown():
-                        this.getBody().play('dead_down');
-                        break;
+                        this.getBody().play('dead_down')
+                        break
                     case this.directionLeft():
-                        this.getBody().play('dead_left');
-                        break;
+                        this.getBody().play('dead_left')
+                        break
                     case this.directionRight():
-                        this.getBody().play('dead_right');
-                        break;
+                        this.getBody().play('dead_right')
+                        break
                 }
-                break;
+                break
         }
     },
-
+    leaveStartArea(mazeLayer) {
+        // console.log(this.timeCounter)
+        const { x, y } = this.getPosition()
+        if (this.bouncingTimes === this.maxBouncingTimes) {
+            // console.log('Acabou')
+            if (x === 113) {
+                this.faceUp()
+            }
+            if (y === 116) {
+                this.faceRight()
+                this.startChasing()
+            }
+        } else if (this.getDirection() === this.directionRight()) {
+            const tile = mazeLayer.getTileAtWorldXY(x + 4, y - 4, true)
+            const tile2 = mazeLayer.getTileAtWorldXY(x + 4, y + 3, true)
+            if (tile.collides || tile2.collides) {
+                this.faceLeft()
+                this.bouncingTimes += 1
+            }
+        } else if (this.getDirection() === this.directionLeft()) {
+            const tile = mazeLayer.getTileAtWorldXY(x - 5, y - 4, true)
+            const tile2 = mazeLayer.getTileAtWorldXY(x - 5, y + 3, true)
+            if (tile.collides || tile2.collides) {
+                this.faceRight()
+                this.bouncingTimes += 1
+            }
+        }
+    },
 })

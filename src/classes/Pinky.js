@@ -10,8 +10,10 @@ export default new Phaser.Class({
         this.name = 'Pinky'
         this.body = scene.physics.add.sprite(x, y, 'pinky').setScale(0.5)
         this.body.setDisplaySize(16, 16)
-        this.startChasing();
-        //this.getsEaten();
+        // this.startChasing();
+        this.target = { x: 0, y: 0 }
+        this.direction = this.directionLeft()
+        this.startLeaveStartArea(5)
         this.body.anims.create({
             key: 'pinky_right',
             frames: scene.anims.generateFrameNames('pinky', {
@@ -94,81 +96,106 @@ export default new Phaser.Class({
     setTarget(mazeLayer, pacman) {
         switch (this.getState()) {
             case this.stateEaten():
-
-                break;
+                break
             case this.stateScatter():
-                this.target = { x: 24, y: -8 };
-                break;
+                this.target = { x: 24, y: -8 }
+                break
             case this.stateChase():
                 switch (pacman.getDirection()) {
                     case pacman.directionUp():
                         this.target = {
                             x: pacman.getPosition().x - 2 * 16,
-                            y: pacman.getPosition().y - 2 * 16
-                        };
-                        break;
+                            y: pacman.getPosition().y - 2 * 16,
+                        }
+                        break
                     case pacman.directionDown():
                         this.target = {
                             x: pacman.getPosition().x,
-                            y: pacman.getPosition().y + 2 * 16
-                        };
-                        break;
+                            y: pacman.getPosition().y + 2 * 16,
+                        }
+                        break
                     case pacman.directionLeft():
                         this.target = {
                             x: pacman.getPosition().x - 2 * 16,
-                            y: pacman.getPosition().y
-                        };
-                        break;
+                            y: pacman.getPosition().y,
+                        }
+                        break
                     case pacman.directionRight():
                         this.target = {
                             x: pacman.getPosition().x + 2 * 16,
-                            y: pacman.getPosition().y
-                        };
-                        break;
+                            y: pacman.getPosition().y,
+                        }
+                        break
                 }
-                break;
+                break
             case this.stateFrightened():
-
-                break;
+                break
             default:
-                this.target = { x: 24, y: -8 };
+                this.target = { x: 24, y: -8 }
         }
     },
 
     playAnimation(animation) {
         switch (animation) {
             case this.directionUp():
-                this.getBody().play('pinky_up');
-                break;
+                this.getBody().play('pinky_up')
+                break
             case this.directionDown():
-                this.getBody().play('pinky_down');
-                break;
+                this.getBody().play('pinky_down')
+                break
             case this.directionLeft():
-                this.getBody().play('pinky_left');
-                break;
+                this.getBody().play('pinky_left')
+                break
             case this.directionRight():
-                this.getBody().play('pinky_right');
-                break;
+                this.getBody().play('pinky_right')
+                break
             case this.stateFrightened():
-                this.getBody().play('frightened');
-                break;
+                this.getBody().play('frightened')
+                break
             case this.stateEaten():
                 switch (this.getDirection()) {
                     case this.directionUp():
-                        this.getBody().play('dead_up');
-                        break;
+                        this.getBody().play('dead_up')
+                        break
                     case this.directionDown():
-                        this.getBody().play('dead_down');
-                        break;
+                        this.getBody().play('dead_down')
+                        break
                     case this.directionLeft():
-                        this.getBody().play('dead_left');
-                        break;
+                        this.getBody().play('dead_left')
+                        break
                     case this.directionRight():
-                        this.getBody().play('dead_right');
-                        break;
+                        this.getBody().play('dead_right')
+                        break
                 }
-                break;
+                break
         }
     },
-
+    leaveStartArea(mazeLayer) {
+        // console.log(this.timeCounter)
+        const { x, y } = this.getPosition()
+        if (this.bouncingTimes === this.maxBouncingTimes) {
+            // console.log('Acabou')
+            if (x === 113) {
+                this.faceUp()
+            }
+            if (y === 116) {
+                this.faceRight()
+                this.startChasing()
+            }
+        } else if (this.getDirection() === this.directionRight()) {
+            const tile = mazeLayer.getTileAtWorldXY(x + 4, y - 4, true)
+            const tile2 = mazeLayer.getTileAtWorldXY(x + 4, y + 3, true)
+            if (tile.collides || tile2.collides) {
+                this.faceLeft()
+                this.bouncingTimes += 1
+            }
+        } else if (this.getDirection() === this.directionLeft()) {
+            const tile = mazeLayer.getTileAtWorldXY(x - 5, y - 4, true)
+            const tile2 = mazeLayer.getTileAtWorldXY(x - 5, y + 3, true)
+            if (tile.collides || tile2.collides) {
+                this.faceRight()
+                this.bouncingTimes += 1
+            }
+        }
+    },
 })
