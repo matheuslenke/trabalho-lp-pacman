@@ -152,18 +152,6 @@ export default class extends Phaser.Scene {
             }
             pinky.update(mazeLayer, time, delta)
         }
-        // pinky.setTarget(mazeLayer, pacman)
-        // pinky.calculateRoute(mazeLayer)
-        // pinky.turnDirection(mazeLayer)
-        // pinky.update(mazeLayer, time, delta)
-        // inky.setTarget(mazeLayer, pacman, blinky)
-        // inky.calculateRoute(mazeLayer)
-        // inky.turnDirection(mazeLayer)
-        // inky.update(mazeLayer, time, delta)
-        // clyde.setTarget(mazeLayer, pacman)
-        // clyde.calculateRoute(mazeLayer)
-        // clyde.turnDirection(mazeLayer)
-        // clyde.update(mazeLayer, time, delta)
 
         // Desenha linha dos fantasmas até seus alvos
         gfx.clear()
@@ -291,23 +279,13 @@ export default class extends Phaser.Scene {
 
     hitGhost(ghost, pacmanSprite) {
         console.log(ghost.texture.key);
+        ghost = getGhost(ghost)
         if (pacman.alive) {
-            if (pacman.powerup) {
-                switch (ghost.texture.key) {
-                    case 'blinky':
-                        blinky.getsEaten()
-                        break;
-                    case 'pinky':
-                        pinky.getsEaten()
-                        break;
-                    case 'inky':
-                        inky.getsEaten()
-                        break;
-                    case 'clyde':
-                        clyde.getsEaten()
-                        break;
-                }
-            } else {
+            if (ghost.getState() === ghost.stateFrightened()) {
+                // this.physics.pause()
+                ghost.getsEaten()
+                // this.physics.resume()
+            } else if (ghost.getState() !== ghost.stateEaten()) {
                 this.physics.pause()
                 const dieSound = this.sound.add('pacmanDie')
                 dieSound.play()
@@ -373,6 +351,26 @@ function hitPowerup(tile) {
     clyde.getsFrightened()
     updateText()
     return false
+}
+
+function getGhost(ghost) {
+    switch (ghost.texture.key) {
+        case 'blinky':
+            return blinky
+            break;
+        case 'pinky':
+            return pinky
+            break;
+        case 'inky':
+            return inky
+            break;
+        case 'clyde':
+            return clyde
+            break;
+        default:
+            console.log(`Didn't find the ${ghost.texture.key} Ghost\n`);
+            return null;
+    }
 }
 
 function updateText() {
