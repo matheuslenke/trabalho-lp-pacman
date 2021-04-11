@@ -287,7 +287,7 @@ export default new Phaser.Class({
     hitPowerup() {
         this.score += 1000
         this.powerup = true
-        setTimeout(this.clearPowerup.bind(this), 6000)
+        setTimeout(this.clearPowerup.bind(this), 10000)
     },
     clearPowerup() {
         this.powerup = false
