@@ -12,8 +12,9 @@ export default new Phaser.Class({
         this.body.setDisplaySize(16, 16)
         // this.startChasing();
         this.target = { x: 0, y: 0 }
-        this.direction = this.directionLeft()
-        this.startLeaveStartArea(5)
+        this.direction = this.directionUp()
+        this.startLeaveStartArea(10)
+        this.faceRight();
         this.body.anims.create({
             key: 'pinky_right',
             frames: scene.anims.generateFrameNames('pinky', {

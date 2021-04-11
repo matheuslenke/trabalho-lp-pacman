@@ -177,10 +177,7 @@ export default new Phaser.Class({
         }
     },
     linearDist(point1, point2) {
-        return Phaser.Math.Distance.BetweenPointsSquared(
-            { x: point1.x, y: point1.y },
-            { x: point2.x, y: point2.y }
-        )
+        return Phaser.Math.Distance.BetweenPointsSquared({ x: point1.x, y: point1.y }, { x: point2.x, y: point2.y })
     },
     indexOfMin(arr) {
         if (arr.length === 0) {
@@ -287,6 +284,9 @@ export default new Phaser.Class({
                 case this.stateChase():
                     this.playAnimation(this.directionLeft())
                     break
+                case this.stateLeavingHouse():
+                    this.playAnimation(this.directionLeft())
+                    break
                 case this.stateScatter():
                     this.playAnimation(this.directionLeft())
                     break
@@ -305,6 +305,9 @@ export default new Phaser.Class({
                     this.playAnimation(this.stateEaten())
                     break
                 case this.stateChase():
+                    this.playAnimation(this.directionRight())
+                    break
+                case this.stateLeavingHouse():
                     this.playAnimation(this.directionRight())
                     break
                 case this.stateScatter():
@@ -327,6 +330,9 @@ export default new Phaser.Class({
                 case this.stateChase():
                     this.playAnimation(this.directionUp())
                     break
+                case this.stateLeavingHouse():
+                    this.playAnimation(this.directionUp())
+                    break
                 case this.stateScatter():
                     this.playAnimation(this.directionUp())
                     break
@@ -345,6 +351,9 @@ export default new Phaser.Class({
                     this.playAnimation(this.stateEaten())
                     break
                 case this.stateChase():
+                    this.playAnimation(this.directionDown())
+                    break
+                case this.stateLeavingHouse():
                     this.playAnimation(this.directionDown())
                     break
                 case this.stateScatter():

@@ -13,8 +13,9 @@ export default new Phaser.Class({
         this.body.y = y
         // this.startChasing();
         this.target = { x: 0, y: 0 }
-        this.direction = this.directionRight()
-        this.startLeaveStartArea(3)
+        this.direction = this.directionUp()
+        this.startLeaveStartArea(15)
+        this.faceRight()
         this.body.anims.create({
             key: 'clyde_right',
             frames: scene.anims.generateFrameNames('clyde', {

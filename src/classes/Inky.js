@@ -12,10 +12,10 @@ export default new Phaser.Class({
         this.body = scene.physics.add.sprite(x, y, 'inky').setScale(0.5)
         this.body.setDisplaySize(16, 16)
         this.target = { x: 0, y: 0 }
-        this.direction = this.directionLeft()
+        this.direction = this.directionUp()
         // this.startChasing();
-        this.startLeaveStartArea(4)
-
+        this.startLeaveStartArea(20)
+        this.faceRight()
         this.body.anims.create({
             key: 'inky_right',
             frames: scene.anims.generateFrameNames('inky', {

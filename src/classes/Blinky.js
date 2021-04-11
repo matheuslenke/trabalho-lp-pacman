@@ -13,11 +13,12 @@ export default new Phaser.Class({
         this.body.x = x
         this.body.y = y
         this.target = { x: 0, y: 0 }
-        this.direction = this.directionRight()
+        this.direction = this.directionUp()
         // this.startChasing();
-        this.startLeaveStartArea(6)
+        this.startLeaveStartArea(5)
         //this.getsFrightened();
         //this.getsEaten();
+        this.faceRight()
         this.body.anims.create({
             key: 'blinky_right',
             frames: scene.anims.generateFrameNames('blinky', {
