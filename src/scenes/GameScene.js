@@ -266,25 +266,43 @@ export default class extends Phaser.Scene {
     }
 
     hitGhost(ghost, pacmanSprite) {
-        if (pacman.alive && !pacman.powerup) {
-            this.physics.pause()
-            const dieSound = this.sound.add('pacmanDie')
-            dieSound.play()
-            dieSound.once(
-                Phaser.Sound.Events.COMPLETE,
-                () => {
-                    if (!this.gameOver) {
-                        pacman.alive = true
-                        this.restartGame()
-                    } else {
-                        this.runGameOver()
-                    }
-                },
-                this
-            )
-            const gameOver = pacman.hitGhost(this)
-            if (gameOver) {
-                this.gameOver = true
+        //console.log(ghost);
+        if (pacman.alive) {
+            if (pacman.powerup) {
+                switch (ghost.texture.key) {
+                    case 'blinky':
+                        blinky.getsEaten()
+                        break;
+                    case 'pinky':
+                        pinky.getsEaten()
+                        break;
+                    case 'inky':
+                        inky.getsEaten()
+                        break;
+                    case 'clyde':
+                        clyde.getsEaten()
+                        break;
+                }
+            } else {
+                this.physics.pause()
+                const dieSound = this.sound.add('pacmanDie')
+                dieSound.play()
+                dieSound.once(
+                    Phaser.Sound.Events.COMPLETE,
+                    () => {
+                        if (!this.gameOver) {
+                            pacman.alive = true
+                            this.restartGame()
+                        } else {
+                            this.runGameOver()
+                        }
+                    },
+                    this
+                )
+                const gameOver = pacman.hitGhost(this)
+                if (gameOver) {
+                    this.gameOver = true
+                }
             }
         }
     }
@@ -325,6 +343,10 @@ function hitPowerup(tile) {
     // Remove a food colidida e aumenta o score
     powerupsLayer.removeTileAt(tile.x, tile.y)
     pacman.hitPowerup()
+    blinky.getsFrightened()
+    pinky.getsFrightened()
+    inky.getsFrightened()
+    clyde.getsFrightened()
     updateText()
     return false
 }

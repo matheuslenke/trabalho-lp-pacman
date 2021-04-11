@@ -369,15 +369,16 @@ export default new Phaser.Class({
     playAnimation(animation) {},
 
     getsEaten() {
-        if (this.state !== EATEN) {
+        if (this.state !== EATEN && this.state !== LEAVINGHOUSE) {
             this.state = EATEN
         }
     },
 
     getsFrightened() {
-        if (this.state !== FRIGHTENED) {
+        if (this.state !== FRIGHTENED && this.state !== LEAVINGHOUSE) {
             this.state = FRIGHTENED
             this.turnAround()
+            setTimeout(this.startChasing.bind(this), 10000)
         }
     },
     turnAround() {
@@ -408,7 +409,7 @@ export default new Phaser.Class({
     },
 
     startScattering() {
-        if (this.state !== SCATTER) {
+        if (this.state !== SCATTER && this.state !== LEAVINGHOUSE) {
             this.state = SCATTER
         }
     },
