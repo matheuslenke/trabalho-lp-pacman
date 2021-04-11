@@ -375,7 +375,7 @@ export default new Phaser.Class({
     },
 
     getsFrightened() {
-        if (this.state !== FRIGHTENED && this.state !== LEAVINGHOUSE) {
+        if (this.state !== FRIGHTENED && this.state !== LEAVINGHOUSE && this.state !== EATEN) {
             this.state = FRIGHTENED
             this.turnAround()
             setTimeout(this.startChasing.bind(this), 10000)

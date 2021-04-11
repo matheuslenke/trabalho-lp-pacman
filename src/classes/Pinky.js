@@ -53,7 +53,7 @@ export default new Phaser.Class({
         })
         this.body.anims.create({
             key: 'frightened',
-            frames: scene.anims.generateFrameNames('blinky', {
+            frames: scene.anims.generateFrameNames('pinky', {
                 start: 8,
                 end: 9,
             }),
@@ -62,32 +62,32 @@ export default new Phaser.Class({
         })
         this.body.anims.create({
             key: 'dead_right',
-            frames: scene.anims.generateFrameNames('blinky', {
-                frames: 2,
+            frames: scene.anims.generateFrameNames('pinky', {
+                frames: [10],
             }),
             frameRate: 6,
             repeat: -1,
         })
         this.body.anims.create({
             key: 'dead_left',
-            frames: scene.anims.generateFrameNames('blinky', {
-                frames: 3,
+            frames: scene.anims.generateFrameNames('pinky', {
+                frames: [11],
             }),
             frameRate: 6,
             repeat: -1,
         })
         this.body.anims.create({
             key: 'dead_up',
-            frames: scene.anims.generateFrameNames('blinky', {
-                frames: 4,
+            frames: scene.anims.generateFrameNames('pinky', {
+                frames: [12],
             }),
             frameRate: 6,
             repeat: -1,
         })
         this.body.anims.create({
             key: 'dead_down',
-            frames: scene.anims.generateFrameNames('blinky', {
-                frames: 5,
+            frames: scene.anims.generateFrameNames('pinky', {
+                frames: [13],
             }),
             frameRate: 6,
             repeat: -1,
@@ -130,6 +130,23 @@ export default new Phaser.Class({
                 }
                 break
             case this.stateFrightened():
+                this.target = { x: 112, y: 116 }
+                let directions_not_blocked = []
+                if (!this.directionBlocked(mazeLayer, this.directionUp())) {
+                    directions_not_blocked.push(this.directionUp())
+                }
+                if (!this.directionBlocked(mazeLayer, this.directionLeft())) {
+                    directions_not_blocked.push(this.directionLeft())
+                }
+                if (!this.directionBlocked(mazeLayer, this.directionDown())) {
+                    directions_not_blocked.push(this.directionDown())
+                }
+                if (!this.directionBlocked(mazeLayer, this.directionRight())) {
+                    directions_not_blocked.push(this.directionRight())
+                }
+                this.nextDirection = this.getRandomDirectionFromArray(
+                    directions_not_blocked
+                )
                 break
             default:
                 this.target = { x: 24, y: -8 }

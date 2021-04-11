@@ -175,12 +175,12 @@ export default class extends Phaser.Scene {
                 blinky.getTarget().y
             )
             .lineStyle(1, 0xeb88df)
-            // .lineBetween(
-            //     pinky.getPosition().x,
-            //     pinky.getPosition().y,
-            //     pinky.getTarget().x,
-            //     pinky.getTarget().y
-            // )
+            .lineBetween(
+                pinky.getPosition().x,
+                pinky.getPosition().y,
+                pinky.getTarget().x,
+                pinky.getTarget().y
+            )
             .lineStyle(1, 0x88e8eb)
             .lineBetween(
                 inky.getPosition().x,
@@ -244,6 +244,30 @@ export default class extends Phaser.Scene {
             null,
             this
         )
+        this.physics.add.collider(pinky.getBody(), mazeLayer)
+        this.physics.add.collider(
+            pinky.getBody(),
+            pacman.getPlayer(),
+            this.hitGhost,
+            null,
+            this
+        )
+        this.physics.add.collider(inky.getBody(), mazeLayer)
+        this.physics.add.collider(
+            inky.getBody(),
+            pacman.getPlayer(),
+            this.hitGhost,
+            null,
+            this
+        )
+        this.physics.add.collider(clyde.getBody(), mazeLayer)
+        this.physics.add.collider(
+            clyde.getBody(),
+            pacman.getPlayer(),
+            this.hitGhost,
+            null,
+            this
+        )
     }
 
     restartGame() {
@@ -266,7 +290,7 @@ export default class extends Phaser.Scene {
     }
 
     hitGhost(ghost, pacmanSprite) {
-        //console.log(ghost);
+        console.log(ghost.texture.key);
         if (pacman.alive) {
             if (pacman.powerup) {
                 switch (ghost.texture.key) {
