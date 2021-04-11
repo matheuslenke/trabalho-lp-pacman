@@ -103,7 +103,7 @@ export default new Phaser.Class({
                 this.target = { x: 116, y: 116 }
                 break
             case this.stateEaten():
-                this.target = { x: 112, y: 124 }
+                this.target = { x: 113, y: 140 }
                 break
             case this.stateScatter():
                 this.target = { x: 200, y: -8 }
@@ -168,34 +168,6 @@ export default new Phaser.Class({
                         break
                 }
                 break
-        }
-    },
-    leaveStartArea(mazeLayer) {
-        // console.log(this.timeCounter)
-        const { x, y } = this.getPosition()
-        if (this.bouncingTimes === this.maxBouncingTimes) {
-            // console.log('Acabou')
-            if (x === 113) {
-                this.faceUp()
-            }
-            if (y === 116) {
-                this.faceRight()
-                this.startChasing()
-            }
-        } else if (this.getDirection() === this.directionRight()) {
-            const tile = mazeLayer.getTileAtWorldXY(x + 4, y - 4, true)
-            const tile2 = mazeLayer.getTileAtWorldXY(x + 4, y + 3, true)
-            if (tile.collides || tile2.collides) {
-                this.faceLeft()
-                this.bouncingTimes += 1
-            }
-        } else if (this.getDirection() === this.directionLeft()) {
-            const tile = mazeLayer.getTileAtWorldXY(x - 5, y - 4, true)
-            const tile2 = mazeLayer.getTileAtWorldXY(x - 5, y + 3, true)
-            if (tile.collides || tile2.collides) {
-                this.faceRight()
-                this.bouncingTimes += 1
-            }
         }
     },
 })
