@@ -225,10 +225,10 @@ export default class extends Phaser.Scene {
         pacman = new Pacman(this, 202, 140, walkMusic, 246)
 
         // Criando fantasmas
-        blinky = new Blinky(this, 114, 140)
-        pinky = new Pinky(this, 125, 140)
-        inky = new Inky(this, 130, 140)
-        clyde = new Clyde(this, 90, 140)
+        blinky = new Blinky(this, 90, 140)
+        pinky = new Pinky(this, 100, 140)
+        inky = new Inky(this, 110, 140)
+        clyde = new Clyde(this, 120, 140)
 
         // Adicionando colisão do mapa com pacman
         mazeLayer.setCollisionByProperty({ collides: true })
