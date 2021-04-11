@@ -247,21 +247,15 @@ export default new Phaser.Class({
     },
     hitGhost() {
         console.log('Hit')
-        if (this.powerup === false) {
-            // Remove imagem das vidas embaixo
-            const lifeImage = this.lifeImages.pop()
-            lifeImage.destroy()
-            // Mata o pacman
-            this.alive = false
-            this.player.play('pacmanDie')
-            this.lives -= 1
-            if (this.lives === 0) {
-                // Game Over
-                return true
-            }
-        } else {
-            // Mata o fantasma
-            console.log('Mata fantasma')
+        // Remove imagem das vidas embaixo
+        const lifeImage = this.lifeImages.pop()
+        lifeImage.destroy()
+        this.alive = false
+        this.player.play('pacmanDie')
+        this.lives -= 1
+        if (this.lives === 0) {
+            // Game Over
+            return true
         }
         return false
     },
