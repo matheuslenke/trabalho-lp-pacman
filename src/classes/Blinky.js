@@ -170,8 +170,4 @@ export default new Phaser.Class({
                 break
         }
     },
-    startDirection() {
-        this.direction = this.directionRight()
-        this.nextDirection = this.directionRight()
-    },
 })

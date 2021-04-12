@@ -458,6 +458,7 @@ export default new Phaser.Class({
             console.log('Falha ao iniciar saída da área inicial')
             return
         }
+        this.startDirection()
         if (this.state !== LEAVINGHOUSE) {
             console.log(`${this.name} will leave in ${bouncingTimes} bounces`)
             this.state = LEAVINGHOUSE
@@ -495,5 +496,8 @@ export default new Phaser.Class({
     startPosition(x, y) {
         this.body.x = x
         this.body.y = y
+    },
+    startDirection() {
+        this.faceRight()
     },
 })
