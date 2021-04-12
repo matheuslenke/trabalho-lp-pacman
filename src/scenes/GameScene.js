@@ -26,6 +26,11 @@ let pinky
 let inky
 let clyde
 
+const GHOST_INITIAL_X = 90
+const GHOST_INITIAL_Y = 140
+const PACMAN_INITIAL_X = 112
+const PACMAN_INITIAL_Y = 212
+
 export default class extends Phaser.Scene {
     constructor() {
         super({ key: 'GameScene' })
@@ -106,6 +111,7 @@ export default class extends Phaser.Scene {
             checkHitPowerup()
             // console.log(pacman.player.x, pacman.player.y)
         }
+
         if (time % 20 >= 0 && time % 20 <= 15) {
             // Lógica do Blinky
             // Se estiver dentro da casinha do labirinto
@@ -210,13 +216,19 @@ export default class extends Phaser.Scene {
         gfx = this.add.graphics()
 
         // Criando o personagem
-        pacman = new Pacman(this, 202, 140, walkMusic, 246)
+        pacman = new Pacman(
+            this,
+            PACMAN_INITIAL_X,
+            PACMAN_INITIAL_Y,
+            walkMusic,
+            246
+        )
 
         // Criando fantasmas
-        blinky = new Blinky(this, 90, 140)
-        pinky = new Pinky(this, 100, 140)
-        inky = new Inky(this, 110, 140)
-        clyde = new Clyde(this, 120, 140)
+        blinky = new Blinky(this, GHOST_INITIAL_X, GHOST_INITIAL_Y)
+        pinky = new Pinky(this, GHOST_INITIAL_X + 10, GHOST_INITIAL_Y)
+        inky = new Inky(this, GHOST_INITIAL_X + 20, GHOST_INITIAL_Y)
+        clyde = new Clyde(this, GHOST_INITIAL_X + 30, GHOST_INITIAL_Y)
 
         // Adicionando colisão do mapa com pacman
         mazeLayer.setCollisionByProperty({ collides: true })
@@ -269,7 +281,15 @@ export default class extends Phaser.Scene {
             },
             this
         )
-        pacman.startPosition(28, 36)
+        pacman.startPosition(PACMAN_INITIAL_X, PACMAN_INITIAL_Y)
+        blinky.startPosition(GHOST_INITIAL_X, GHOST_INITIAL_Y)
+        blinky.startLeaveStartArea(5)
+        pinky.startPosition(GHOST_INITIAL_X + 10, GHOST_INITIAL_Y)
+        pinky.startLeaveStartArea(15)
+        inky.startPosition(GHOST_INITIAL_X + 20, GHOST_INITIAL_Y)
+        inky.startLeaveStartArea(10)
+        clyde.startPosition(GHOST_INITIAL_X + 30, GHOST_INITIAL_Y)
+        clyde.startLeaveStartArea(3)
         this.physics.resume()
     }
 
@@ -278,7 +298,7 @@ export default class extends Phaser.Scene {
     }
 
     hitGhost(ghost, pacmanSprite) {
-        console.log(ghost.texture.key);
+        console.log(ghost.texture.key)
         ghost = getGhost(ghost)
         if (pacman.alive) {
             if (ghost.getState() === ghost.stateFrightened()) {
@@ -357,19 +377,19 @@ function getGhost(ghost) {
     switch (ghost.texture.key) {
         case 'blinky':
             return blinky
-            break;
+            break
         case 'pinky':
             return pinky
-            break;
+            break
         case 'inky':
             return inky
-            break;
+            break
         case 'clyde':
             return clyde
-            break;
+            break
         default:
-            console.log(`Didn't find the ${ghost.texture.key} Ghost\n`);
-            return null;
+            console.log(`Didn't find the ${ghost.texture.key} Ghost\n`)
+            return null
     }
 }
 

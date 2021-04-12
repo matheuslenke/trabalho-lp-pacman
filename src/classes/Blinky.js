@@ -13,7 +13,7 @@ export default new Phaser.Class({
         this.body.x = x
         this.body.y = y
         this.target = { x: 0, y: 0 }
-        this.direction = this.directionUp()
+        this.startDirection()
         // this.startChasing();
         this.startLeaveStartArea(5)
         //this.getsFrightened();
@@ -169,5 +169,9 @@ export default new Phaser.Class({
                 }
                 break
         }
+    },
+    startDirection() {
+        this.direction = this.directionRight()
+        this.nextDirection = this.directionRight()
     },
 })

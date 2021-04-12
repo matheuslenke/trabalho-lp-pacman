@@ -23,8 +23,6 @@ export default new Phaser.Class({
         this.bouncingTimes = 0
         this.target = { x: 0, y: 0 }
         this.name = 'Fantasma'
-        this.canPassDoor = true
-        this.timeLEAVINGHOUSE = 0
     },
     getBody() {
         return this.body
@@ -132,14 +130,18 @@ export default new Phaser.Class({
     },
 
     calculateRoute(mazeLayer) {
-        if (this.getPosition().x === this.getTarget().x &&
+        if (
+            this.getPosition().x === this.getTarget().x &&
             this.getPosition().y === this.getTarget().y &&
-            this.getState() === this.stateEaten()) {
-            console.log("revive\n")
+            this.getState() === this.stateEaten()
+        ) {
+            console.log('revive\n')
             this.startLeaveStartArea(0)
         } else {
-            if (this.getState() !== this.stateFrightened() &&
-                this.getState() !== this.stateLeavingHouse()) {
+            if (
+                this.getState() !== this.stateFrightened() &&
+                this.getState() !== this.stateLeavingHouse()
+            ) {
                 let [up_dist, left_dist, down_dist, right_dist] = [
                     99999999,
                     99999999,
@@ -148,16 +150,28 @@ export default new Phaser.Class({
                 ]
                 const { x, y } = this.getPosition()
                 if (!this.directionBlocked(mazeLayer, this.directionRight())) {
-                    right_dist = this.linearDist({ x: x + 16, y }, this.getTarget())
+                    right_dist = this.linearDist(
+                        { x: x + 16, y },
+                        this.getTarget()
+                    )
                 }
                 if (!this.directionBlocked(mazeLayer, this.directionLeft())) {
-                    left_dist = this.linearDist({ x: x - 16, y }, this.getTarget())
+                    left_dist = this.linearDist(
+                        { x: x - 16, y },
+                        this.getTarget()
+                    )
                 }
                 if (!this.directionBlocked(mazeLayer, this.directionUp())) {
-                    up_dist = this.linearDist({ x, y: y - 16 }, this.getTarget())
+                    up_dist = this.linearDist(
+                        { x, y: y - 16 },
+                        this.getTarget()
+                    )
                 }
                 if (!this.directionBlocked(mazeLayer, this.directionDown())) {
-                    down_dist = this.linearDist({ x, y: y + 16 }, this.getTarget())
+                    down_dist = this.linearDist(
+                        { x, y: y + 16 },
+                        this.getTarget()
+                    )
                 }
                 const menor_caminho = this.indexOfMin([
                     up_dist,
@@ -165,11 +179,13 @@ export default new Phaser.Class({
                     down_dist,
                     right_dist,
                 ])
-                if (this.getPosition().x === this.getTarget().x &&
+                if (
+                    this.getPosition().x === this.getTarget().x &&
                     this.getPosition().y >= this.getTarget().y - 24 &&
                     this.getPosition().y < this.getTarget().y &&
-                    this.getState() === this.stateEaten()) {
-                    console.log('teste\n');
+                    this.getState() === this.stateEaten()
+                ) {
+                    console.log('teste\n')
                     this.nextDirection = this.directionDown()
                     this.faceDown()
                 } else {
@@ -194,7 +210,10 @@ export default new Phaser.Class({
         }
     },
     linearDist(point1, point2) {
-        return Phaser.Math.Distance.BetweenPointsSquared({ x: point1.x, y: point1.y }, { x: point2.x, y: point2.y })
+        return Phaser.Math.Distance.BetweenPointsSquared(
+            { x: point1.x, y: point1.y },
+            { x: point2.x, y: point2.y }
+        )
     },
     indexOfMin(arr) {
         if (arr.length === 0) {
@@ -392,9 +411,11 @@ export default new Phaser.Class({
     },
 
     getsFrightened() {
-        if (this.state !== FRIGHTENED &&
+        if (
+            this.state !== FRIGHTENED &&
             this.state !== LEAVINGHOUSE &&
-            this.state !== EATEN) {
+            this.state !== EATEN
+        ) {
             this.state = FRIGHTENED
             this.turnAround()
             setTimeout(this.startChasing.bind(this), 10000)
@@ -422,8 +443,7 @@ export default new Phaser.Class({
     },
 
     startChasing() {
-        if (this.state !== CHASE &&
-            this.state !== EATEN) {
+        if (this.state !== CHASE && this.state !== EATEN) {
             this.state = CHASE
         }
     },
@@ -434,8 +454,12 @@ export default new Phaser.Class({
         }
     },
     startLeaveStartArea(bouncingTimes) {
+        if (!bouncingTimes) {
+            console.log('Falha ao iniciar saída da área inicial')
+            return
+        }
         if (this.state !== LEAVINGHOUSE) {
-            console.log(`${this.name} will leave in ${bouncingTimes} bounces`);
+            console.log(`${this.name} will leave in ${bouncingTimes} bounces`)
             this.state = LEAVINGHOUSE
             this.bouncingTimes = 0
             this.maxBouncingTimes = bouncingTimes
@@ -467,5 +491,9 @@ export default new Phaser.Class({
                 this.bouncingTimes += 1
             }
         }
+    },
+    startPosition(x, y) {
+        this.body.x = x
+        this.body.y = y
     },
 })
