@@ -51,7 +51,7 @@ projeto
 -   Arquivos de configuração:
 
     -   `.babelrc`, `.eslintrc.json`, `.prettierrc` são arquivos de configuração de estilos/ utilização de features do ES6.
-    -   Na pasta `webpack` temos os arquivos de configuração do webpack para desenvolvimento e produção, que basicamente realiza diversas otimizações e roda um servidor node para executarmos nosso projeto (que é uma exigência do Phaser3 para segurança ser rodado com um servidor por trás)
+    -   Na pasta `webpack` temos os arquivos de configuração do webpack para desenvolvimento e produção, que basicamente realiza diversas otimizações e roda um servidor http para executarmos nosso projeto (que é uma exigência do Phaser3 para segurança ser rodado com um servidor por trás)
 
 -   Assets:
 
@@ -92,11 +92,11 @@ Para compilar o código para produção novamente, caso você tenha realizado mo
     $ npm run build
 ```
 
-Agora para rodar o código compilado, você precisa executar como um servidor node o conteúdo da pasta dist. Para isso, recomendo a utilização da extensão [http-server](https://www.npmjs.com/package/http-server)
+Agora para rodar o código compilado, você precisa executar como um servidor http o conteúdo da pasta dist. Para isso, recomendo a utilização da extensão [http-server](https://www.npmjs.com/package/http-server)
 Para instalá-la, basta rodar:
 
 ```
-    $ npm install -g http-server
+    $ npm install --global http-server
 ```
 
 Finalmente, rodando a aplicação (caso esteja na raíz do projeto)
