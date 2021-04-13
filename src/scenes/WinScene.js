@@ -6,9 +6,9 @@ import PinkySprite from '../../assets/images/Sprite_Sheets/pinky.png'
 import InkySprite from '../../assets/images/Sprite_Sheets/inky.png'
 import ClydeSprite from '../../assets/images/Sprite_Sheets/clyde.png'
 
+import winSound from '../../assets/audio/winSound.wav'
+
 import Pacman from '../classes/Pacman'
-import Food from '../classes/Food'
-import Fantasma from '../classes/Fantasma'
 import Blinky from '../classes/Blinky'
 import Pinky from '../classes/Pinky'
 import Inky from '../classes/Inky'
@@ -25,8 +25,7 @@ export default class WinScene extends Phaser.Scene {
             frameWidth: 16,
             frameHeight: 16,
         })
-        this.load.image('tiles', Map)
-        this.load.tilemapTiledJSON('map', '../assets/tilemaps/maze1.json')
+
         this.load.spritesheet('blinky', BlinkySprite, {
             frameWidth: 16,
             frameHeight: 16,
@@ -43,7 +42,7 @@ export default class WinScene extends Phaser.Scene {
             frameWidth: 16,
             frameHeight: 16,
         })
-        this.load.audio('win', '../../assets/audio/winSound.wav')
+        this.load.audio('win', winSound)
     }
 
     create() {

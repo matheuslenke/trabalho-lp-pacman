@@ -5,8 +5,11 @@ import BlinkySprite from '../../assets/images/Sprite_Sheets/blinky.png'
 import PinkySprite from '../../assets/images/Sprite_Sheets/pinky.png'
 import InkySprite from '../../assets/images/Sprite_Sheets/inky.png'
 import ClydeSprite from '../../assets/images/Sprite_Sheets/clyde.png'
-// import GameStartAudio from '../../assets/audio/opening.mp3'
 import Map from '../../assets/images/Sprite_Sheets/MazeTilemap.png'
+
+import openingAudio from '../../assets/audio/opening.mp3'
+import pacmanDieAudio from '../../assets/audio/pacmanDie.mp3'
+import pacmanWalkAudio from '../../assets/audio/wakawaka.mp3'
 
 import Pacman from '../classes/Pacman'
 import Blinky from '../classes/Blinky'
@@ -67,9 +70,9 @@ export default class extends Phaser.Scene {
         this.load.image('map', Map)
 
         // Audios
-        this.load.audio('opening', '../../assets/audio/opening.mp3')
-        this.load.audio('pacmanDie', '../../assets/audio/pacmanDie.mp3')
-        this.load.audio('pacmanWalk', '../../assets/audio/wakawaka.mp3')
+        this.load.audio('opening', openingAudio)
+        this.load.audio('pacmanDie', pacmanDieAudio)
+        this.load.audio('pacmanWalk', pacmanWalkAudio)
     }
 
     create() {
@@ -193,16 +196,16 @@ export default class extends Phaser.Scene {
 
     startGame() {
         // Tocar a música de intro
-        // this.scene.pause()
-        // const openingMusic = this.sound.add('opening')
-        // openingMusic.play()
-        // openingMusic.once(
-        //     Phaser.Sound.Events.COMPLETE,
-        //     () => {
-        //         this.scene.resume()
-        //     },
-        //     this
-        // )
+        this.scene.pause()
+        const openingMusic = this.sound.add('opening')
+        openingMusic.play()
+        openingMusic.once(
+            Phaser.Sound.Events.COMPLETE,
+            () => {
+                this.scene.resume()
+            },
+            this
+        )
         const walkMusic = this.sound.add('pacmanWalk')
         // Criação do labirinto
         map = this.make.tilemap({ key: 'map' })
