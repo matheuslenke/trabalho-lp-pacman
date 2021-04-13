@@ -10,6 +10,7 @@ export default new Phaser.Class({
         this.name = 'Blinky'
         this.body = scene.physics.add.sprite(x, y, 'blinky').setScale(0.5)
         this.body.setDisplaySize(16, 16)
+        this.body.setSize(6, 6)
         this.body.x = x
         this.body.y = y
         this.target = { x: 0, y: 0 }

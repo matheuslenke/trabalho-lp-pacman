@@ -135,7 +135,7 @@ export default new Phaser.Class({
             this.getPosition().y === this.getTarget().y &&
             this.getState() === this.stateEaten()
         ) {
-            console.log('revive\n')
+            console.log(`${this.name} revived`)
             this.startLeaveStartArea(2)
         } else {
             if (
@@ -407,6 +407,8 @@ export default new Phaser.Class({
         if (this.state !== EATEN && this.state !== LEAVINGHOUSE) {
             this.state = EATEN
             this.playAnimation(this.stateEaten())
+            clearTimeout(this.scatterTimeout)
+            clearTimeout(this.chasingTimeout)
         }
     },
 
@@ -422,6 +424,8 @@ export default new Phaser.Class({
                 this.startChasing.bind(this),
                 10000
             )
+            clearTimeout(this.scatterTimeout)
+            clearTimeout(this.chasingTimeout)
         }
     },
     turnAround() {
@@ -448,19 +452,32 @@ export default new Phaser.Class({
     startChasing() {
         if (this.state !== CHASE && this.state !== EATEN) {
             this.state = CHASE
+            clearTimeout(this.scatterTimeout)
+            clearTimeout(this.chasingTimeout)
+            console.log(`Startou Chasing ${this.name}`)
+            this.scatterTimeout = setTimeout(
+                this.startScattering.bind(this),
+                10000
+            )
         }
     },
 
     startScattering() {
         if (this.state !== SCATTER && this.state !== LEAVINGHOUSE) {
             this.state = SCATTER
+            clearTimeout(this.scatterTimeout)
+            // clearTimeout(this.chasingTimeout)
+            console.log(`Startou Scattering ${this.name}`)
+            this.chasingTimeout = setTimeout(this.startChasing.bind(this), 7000)
         }
     },
     startLeaveStartArea(bouncingTimes) {
         if (!bouncingTimes) {
-            console.log('Falha ao iniciar saída da área inicial')
+            // console.log('Falha ao iniciar saída da área inicial')
             return
         }
+        clearTimeout(this.chasingTimeout)
+        clearTimeout(this.scatterTimeout)
         clearTimeout(this.FrightenedTimeout)
         this.scatterTime = 0
         this.startDirection()
@@ -472,7 +489,6 @@ export default new Phaser.Class({
         }
     },
     leaveStartArea(mazeLayer) {
-        // console.log(this.timeCounter)
         const { x, y } = this.getPosition()
         if (this.bouncingTimes === this.maxBouncingTimes) {
             if (x === 113) {

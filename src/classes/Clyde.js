@@ -9,6 +9,7 @@ export default new Phaser.Class({
         this.name = 'Clyde'
         this.body = scene.physics.add.sprite(x, y, 'clyde').setScale(0.5)
         this.body.setDisplaySize(16, 16)
+        this.body.setSize(6, 6)
         this.body.x = x
         this.body.y = y
         this.startDirection()

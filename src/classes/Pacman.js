@@ -111,16 +111,16 @@ export default new Phaser.Class({
         return this.nextDirection
     },
     directionUp() {
-        return UP;
+        return UP
     },
     directionDown() {
-        return DOWN;
+        return DOWN
     },
     directionLeft() {
-        return LEFT;
+        return LEFT
     },
     directionRight() {
-        return RIGHT;
+        return RIGHT
     },
     wantToFaceLeft() {
         this.nextDirection = LEFT

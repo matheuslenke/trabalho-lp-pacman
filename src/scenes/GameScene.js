@@ -38,6 +38,7 @@ export default class extends Phaser.Scene {
     constructor() {
         super({ key: 'GameScene' })
         this.frameTime = 0
+        this.debugMode = false
     }
 
     init() {
@@ -84,6 +85,17 @@ export default class extends Phaser.Scene {
         // Texto de score
         scoreText = this.add.text(5, 5, '', { fontSize: '8px', fill: '#fff' })
         updateText()
+
+        // Tecla para ativar debug mode
+        this.DKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
+        this.input.keyboard.on(
+            'keyup-D',
+            function () {
+                this.debugMode = !this.debugMode
+                gfx.clear()
+            },
+            this
+        )
     }
 
     update(time, delta) {
@@ -161,35 +173,37 @@ export default class extends Phaser.Scene {
         pinky.update(mazeLayer, time, delta)
 
         // Desenha linha dos fantasmas até seus alvos
-        gfx.clear()
-            .lineStyle(1, 0xff3300)
-            .lineBetween(
-                blinky.getPosition().x,
-                blinky.getPosition().y,
-                blinky.getTarget().x,
-                blinky.getTarget().y
-            )
-            .lineStyle(1, 0xeb88df)
-            .lineBetween(
-                pinky.getPosition().x,
-                pinky.getPosition().y,
-                pinky.getTarget().x,
-                pinky.getTarget().y
-            )
-            .lineStyle(1, 0x88e8eb)
-            .lineBetween(
-                inky.getPosition().x,
-                inky.getPosition().y,
-                inky.getTarget().x,
-                inky.getTarget().y
-            )
-            .lineStyle(1, 0xecbf65)
-            .lineBetween(
-                clyde.getPosition().x,
-                clyde.getPosition().y,
-                clyde.getTarget().x,
-                clyde.getTarget().y
-            )
+        if (this.debugMode === true) {
+            gfx.clear()
+                .lineStyle(1, 0xff3300)
+                .lineBetween(
+                    blinky.getPosition().x,
+                    blinky.getPosition().y,
+                    blinky.getTarget().x,
+                    blinky.getTarget().y
+                )
+                .lineStyle(1, 0xeb88df)
+                .lineBetween(
+                    pinky.getPosition().x,
+                    pinky.getPosition().y,
+                    pinky.getTarget().x,
+                    pinky.getTarget().y
+                )
+                .lineStyle(1, 0x88e8eb)
+                .lineBetween(
+                    inky.getPosition().x,
+                    inky.getPosition().y,
+                    inky.getTarget().x,
+                    inky.getTarget().y
+                )
+                .lineStyle(1, 0xecbf65)
+                .lineBetween(
+                    clyde.getPosition().x,
+                    clyde.getPosition().y,
+                    clyde.getTarget().x,
+                    clyde.getTarget().y
+                )
+        }
     }
 
     startGame() {

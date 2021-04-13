@@ -11,6 +11,7 @@ export default new Phaser.Class({
         this.name = 'Inky'
         this.body = scene.physics.add.sprite(x, y, 'inky').setScale(0.5)
         this.body.setDisplaySize(16, 16)
+        this.body.setSize(6, 6)
         this.target = { x: 0, y: 0 }
         this.startDirection()
         // this.startChasing();

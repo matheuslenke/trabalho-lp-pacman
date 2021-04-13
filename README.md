@@ -105,6 +105,10 @@ Finalmente, rodando a aplicação (caso esteja na raíz do projeto)
     $ http-server ./dist
 ```
 
+### Debug mode
+
+-   Para rodar o projeto em debug mode, basta apertar a tecla D durante o jogo que você verá os targets dos fantasmas
+
 O projeto será iniciado na porta 8080!
 
 Por Matheus Lenke e Fernando Bisi
