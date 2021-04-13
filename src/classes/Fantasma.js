@@ -30,11 +30,6 @@ export default new Phaser.Class({
     update(mazeLayer, time, delta) {
         const { x, y } = this.body
         this.timeCounter += 1
-        this.scatterTime += 1
-        if (this.scatterTime % 100 === 0) {
-            this.startScattering()
-            console.log('Startou scattering')
-        }
         if (this.direction === LEFT) {
             const tile = mazeLayer.getTileAtWorldXY(x - 5, y - 4, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x - 5, y + 3, true)
