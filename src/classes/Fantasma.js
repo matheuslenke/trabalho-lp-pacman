@@ -30,6 +30,11 @@ export default new Phaser.Class({
     update(mazeLayer, time, delta) {
         const { x, y } = this.body
         this.timeCounter += 1
+        this.scatterTime += 1
+        if (this.scatterTime % 100 === 0) {
+            this.startScattering()
+            console.log('Startou scattering')
+        }
         if (this.direction === LEFT) {
             const tile = mazeLayer.getTileAtWorldXY(x - 5, y - 4, true)
             const tile2 = mazeLayer.getTileAtWorldXY(x - 5, y + 3, true)
@@ -136,7 +141,7 @@ export default new Phaser.Class({
             this.getState() === this.stateEaten()
         ) {
             console.log('revive\n')
-            this.startLeaveStartArea(0)
+            this.startLeaveStartArea(2)
         } else {
             if (
                 this.getState() !== this.stateFrightened() &&
@@ -185,7 +190,6 @@ export default new Phaser.Class({
                     this.getPosition().y < this.getTarget().y &&
                     this.getState() === this.stateEaten()
                 ) {
-                    console.log('teste\n')
                     this.nextDirection = this.directionDown()
                     this.faceDown()
                 } else {
@@ -407,6 +411,7 @@ export default new Phaser.Class({
     getsEaten() {
         if (this.state !== EATEN && this.state !== LEAVINGHOUSE) {
             this.state = EATEN
+            this.playAnimation(this.stateEaten())
         }
     },
 
@@ -418,7 +423,10 @@ export default new Phaser.Class({
         ) {
             this.state = FRIGHTENED
             this.turnAround()
-            setTimeout(this.startChasing.bind(this), 10000)
+            this.FrightenedTimeout = setTimeout(
+                this.startChasing.bind(this),
+                10000
+            )
         }
     },
     turnAround() {
@@ -458,6 +466,8 @@ export default new Phaser.Class({
             console.log('Falha ao iniciar saída da área inicial')
             return
         }
+        clearTimeout(this.FrightenedTimeout)
+        this.scatterTime = 0
         this.startDirection()
         if (this.state !== LEAVINGHOUSE) {
             console.log(`${this.name} will leave in ${bouncingTimes} bounces`)
@@ -470,7 +480,6 @@ export default new Phaser.Class({
         // console.log(this.timeCounter)
         const { x, y } = this.getPosition()
         if (this.bouncingTimes === this.maxBouncingTimes) {
-            // console.log('Acabou')
             if (x === 113) {
                 this.faceUp()
             }
@@ -498,6 +507,7 @@ export default new Phaser.Class({
         this.body.y = y
     },
     startDirection() {
+        this.nextDirection = RIGHT
         this.faceRight()
     },
 })

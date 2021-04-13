@@ -115,52 +115,50 @@ export default class extends Phaser.Scene {
             // console.log(pacman.player.x, pacman.player.y)
         }
 
-        if (time % 20 >= 0 && time % 20 <= 15) {
-            // Lógica do Blinky
-            // Se estiver dentro da casinha do labirinto
-            if (blinky.getState() === blinky.stateLeavingHouse()) {
-                blinky.leaveStartArea(mazeLayer)
-            } else {
-                // Se tiver saído da casinha do labirinto
-                blinky.setTarget(mazeLayer, pacman)
-                blinky.calculateRoute(mazeLayer)
-                blinky.turnDirection(mazeLayer)
-            }
-            blinky.update(mazeLayer, time, delta)
-            // Lógica do Clyde
-            // Se estiver dentro da casinha do labirinto
-            if (clyde.getState() === clyde.stateLeavingHouse()) {
-                clyde.leaveStartArea(mazeLayer)
-            } else {
-                // Se tiver saído da casinha do labirinto
-                clyde.setTarget(mazeLayer, pacman)
-                clyde.calculateRoute(mazeLayer)
-                clyde.turnDirection(mazeLayer)
-            }
-            clyde.update(mazeLayer, time, delta)
-            // Lógica do Inky
-            // Se estiver dentro da casinha do labirinto
-            if (inky.getState() === inky.stateLeavingHouse()) {
-                inky.leaveStartArea(mazeLayer)
-            } else {
-                // Se tiver saído da casinha do labirinto
-                inky.setTarget(mazeLayer, pacman)
-                inky.calculateRoute(mazeLayer)
-                inky.turnDirection(mazeLayer)
-            }
-            inky.update(mazeLayer, time, delta)
-            // Lógica do Pinky
-            // Se estiver dentro da casinha do labirinto
-            if (pinky.getState() === pinky.stateLeavingHouse()) {
-                pinky.leaveStartArea(mazeLayer)
-            } else {
-                // Se tiver saído da casinha do labirinto
-                pinky.setTarget(mazeLayer, pacman)
-                pinky.calculateRoute(mazeLayer)
-                pinky.turnDirection(mazeLayer)
-            }
-            pinky.update(mazeLayer, time, delta)
+        // Lógica do Blinky
+        // Se estiver dentro da casinha do labirinto
+        if (blinky.getState() === blinky.stateLeavingHouse()) {
+            blinky.leaveStartArea(mazeLayer)
+        } else {
+            // Se tiver saído da casinha do labirinto
+            blinky.setTarget(mazeLayer, pacman)
+            blinky.calculateRoute(mazeLayer)
+            blinky.turnDirection(mazeLayer)
         }
+        blinky.update(mazeLayer, time, delta)
+        // Lógica do Clyde
+        // Se estiver dentro da casinha do labirinto
+        if (clyde.getState() === clyde.stateLeavingHouse()) {
+            clyde.leaveStartArea(mazeLayer)
+        } else {
+            // Se tiver saído da casinha do labirinto
+            clyde.setTarget(mazeLayer, pacman)
+            clyde.calculateRoute(mazeLayer)
+            clyde.turnDirection(mazeLayer)
+        }
+        clyde.update(mazeLayer, time, delta)
+        // Lógica do Inky
+        // Se estiver dentro da casinha do labirinto
+        if (inky.getState() === inky.stateLeavingHouse()) {
+            inky.leaveStartArea(mazeLayer)
+        } else {
+            // Se tiver saído da casinha do labirinto
+            inky.setTarget(mazeLayer, pacman)
+            inky.calculateRoute(mazeLayer)
+            inky.turnDirection(mazeLayer)
+        }
+        inky.update(mazeLayer, time, delta)
+        // Lógica do Pinky
+        // Se estiver dentro da casinha do labirinto
+        if (pinky.getState() === pinky.stateLeavingHouse()) {
+            pinky.leaveStartArea(mazeLayer)
+        } else {
+            // Se tiver saído da casinha do labirinto
+            pinky.setTarget(mazeLayer, pacman)
+            pinky.calculateRoute(mazeLayer)
+            pinky.turnDirection(mazeLayer)
+        }
+        pinky.update(mazeLayer, time, delta)
 
         // Desenha linha dos fantasmas até seus alvos
         gfx.clear()
