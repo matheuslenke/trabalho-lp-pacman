@@ -35,7 +35,7 @@ const config = {
     height: 288,
     pixelArt: true,
     scale: {
-        zoom: 3,
+        zoom: 2,
     },
     physics: {
         default: 'arcade',

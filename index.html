@@ -14,36 +14,66 @@
         @font-face {
             font-family: Emulogic;
             src: url('assets/fonts/Emulogic-zrEw.ttf');
-            font-weight:400;
-            font-weight:normal;
+            font-weight: 400;
+            font-weight: normal;
         }
-        * {
+
+        *,
+        body {
             margin: 0;
             padding: 0;
         }
 
-        div {
+        body {
+            height: 100vh;
+
+        }
+
+        section {
             background-color: #111;
             text-align: center;
             font-size: 48px;
+            max-height: 36px;
+            flex: 2;
+            width: 100%;
+            z-index: 2;
         }
 
         main {
+            background-color: #111;
+            flex: 5;
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
+
+        }
+
+        main div {
+            margin-top: 36px;
+        }
+
+        .container {
             height: 100vh;
-            background-color: #111;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
         }
     </style>
 </head>
 
 <body>
-    <div>
-        <span style="color: white;">Pacman</span>
+    <div class="container">
+        <section>
+            <span style="color: white;">Pacman</span>
+        </section>
+        <main>
+            <div id="pacman"></div>
+        </main>
     </div>
-    <main>
-        <div id="pacman" />
-    </main>
 </body>
+
 </html>
