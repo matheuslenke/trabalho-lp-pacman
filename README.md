@@ -2,6 +2,8 @@
 
 Trabalho de Linguagens de Programação recriando o jogo Pacman em Javascript
 
+Você pode jogá-lo [Aqui](https://trabalho-pacman.netlify.app/)
+
 ## Estrutura de arquivos
 
 Primeiro, uma breve explicação sobre estrutura de arquivos:
