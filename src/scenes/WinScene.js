@@ -94,11 +94,11 @@ export default class WinScene extends Phaser.Scene {
         }
 
         // Atualiza movimento dos fantasmas
-        if (time % 400 >= 0 && time % 400 <= 15) {
-            this.clyde.cycleDirection()
-            this.pinky.cycleDirection()
-            this.blinky.cycleDirection()
-            this.inky.cycleDirection()
-        }
+        // if (time % 400 >= 0 && time % 400 <= 15) {
+        //     this.clyde.cycleDirection()
+        //     this.pinky.cycleDirection()
+        //     this.blinky.cycleDirection()
+        //     this.inky.cycleDirection()
+        // }
     }
 }
